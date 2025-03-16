@@ -14,12 +14,17 @@ class AVLTree<K: Comparable<K>, V>: Tree<K, V, AVLNode<K, V>>() {
     }
 
     private fun rightRotate(y : AVLNode<K,V>) : AVLNode<K,V> {
-        val x: AVLNode<K, V> = y.leftChild ?: throw IllegalArgumentException("invalid argument")
+        val x: AVLNode<K, V> = y.leftChild ?: throw IllegalArgumentException("invalid argument left")
         val T2: AVLNode<K, V>? = x.rightChild
 
         //rotation
         x.rightChild = y
         y.leftChild = T2
+
+        //update tree root
+        if(y === root){
+            root = x
+        }
 
         //update heights
         y.height = 1 + max(height(y.leftChild), height(y.rightChild))
@@ -37,9 +42,14 @@ class AVLTree<K: Comparable<K>, V>: Tree<K, V, AVLNode<K, V>>() {
         y.leftChild = x
         x.rightChild = T2
 
+        //update tree root
+        if(x === root){
+            root = y
+        }
+
         //update heights
-        x.height = 1 + max(height(y.leftChild), height(y.rightChild))
-        y.height = 1 + max(height(x.leftChild), height(x.rightChild))
+        x.height = 1 + max(height(x.leftChild), height(x.rightChild))
+        y.height = 1 + max(height(y.leftChild), height(y.rightChild))
 
         //return new root
         return y
@@ -54,7 +64,12 @@ class AVLTree<K: Comparable<K>, V>: Tree<K, V, AVLNode<K, V>>() {
 
     private fun insertAVL(node : AVLNode<K,V>?, key: K, newValue: V) : AVLNode<K,V>{
         if(node == null){
-            return AVLNode(key,newValue)
+            val newNode = AVLNode(key,newValue)
+            if(size == 0){
+                root = newNode
+            }
+            size++
+            return newNode
         }
         if (key < node.key){
             node.leftChild = insertAVL(node.leftChild,key,newValue)
