@@ -142,6 +142,21 @@ class AVLTree<K: Comparable<K>, V>: Tree<K, V, AVLNode<K, V>>() {
         return balancing(node)
     }
 
+    private fun findAVL(node: AVLNode<K,V>?, key: K) : AVLNode<K,V>?{
+        if(node == null){
+            return null
+        }
+        if(key < node.key){
+            return findAVL(node.leftChild, key)
+        }
+        else if(key > node.key){
+            return findAVL(node.rightChild, key)
+        }
+        else{
+            return node
+        }
+    }
+
     override fun insert(key: K, newValue: V) {
         insertAVL(root,key,newValue)
     }
@@ -152,5 +167,8 @@ class AVLTree<K: Comparable<K>, V>: Tree<K, V, AVLNode<K, V>>() {
             size--
         }
     }
-    override fun find(key: K): V? {return null}
+    override fun find(key: K): V? {
+        val value = findAVL(root,key) ?: return null
+        return value.value
+    }
 }
