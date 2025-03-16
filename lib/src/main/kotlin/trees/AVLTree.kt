@@ -52,7 +52,51 @@ class AVLTree<K: Comparable<K>, V>: Tree<K, V, AVLNode<K, V>>() {
         return height(node.leftChild) - height(node.rightChild)
     }
 
-    override fun insert(key: K, newValue: V) {}
+    private fun insertAVL(node : AVLNode<K,V>?, key: K, newValue: V) : AVLNode<K,V>{
+        if(node == null){
+            return AVLNode(key,newValue)
+        }
+        if (key < node.key){
+            node.leftChild = insertAVL(node.leftChild,key,newValue)
+        }
+        else if(key > node.key){
+            node.rightChild = insertAVL(node.rightChild,key,newValue)
+        }
+        else{
+            node.value = newValue
+            return node
+        }
+
+        node.height = 1 + max(height(node.leftChild),height(node.rightChild))
+        val balance = getBalance(node)
+
+        if(balance > 1) {
+            val left = node.leftChild ?: throw Exception("incorrect tree")
+            if (key < left.key){
+                return rightRotate(node)
+            }
+            else{
+                node.leftChild = leftRotate(left)
+                return rightRotate(node)
+            }
+        }
+        if(balance < -1){
+            val right = node.rightChild ?: throw Exception("incorrect tree")
+            if(key > right.key){
+                return leftRotate(node)
+            }
+            else{
+                node.rightChild = rightRotate(right)
+                return leftRotate(node)
+            }
+        }
+        return node
+    }
+
+    override fun insert(key: K, newValue: V) {
+        insertAVL(root,key,newValue)
+    }
+
     override fun remove(key: K) {}
     override fun find(key: K): V? {return null}
 }
