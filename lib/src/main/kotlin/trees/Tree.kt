@@ -20,7 +20,6 @@ abstract class Tree<K : Comparable<K>, V, treeNode : Node<K, V, treeNode>> : Ite
             override fun hasNext(): Boolean {
                 if (!wasRootInQueue) {
                     if (rootCopy != null) {
-                        queue.add(rootCopy)
                         wasRootInQueue = true
                         bfs(rootCopy)
                     } else return false
@@ -36,11 +35,10 @@ abstract class Tree<K : Comparable<K>, V, treeNode : Node<K, V, treeNode>> : Ite
                 val leftChild = node.leftChild
                 val rightChild = node.rightChild
                 if (leftChild != null) {
-                    queue.add(leftChild)
                     bfs(leftChild)
                 }
+                queue.add(node)
                 if (rightChild != null) {
-                    queue.add(rightChild)
                     bfs(rightChild)
                 }
             }
