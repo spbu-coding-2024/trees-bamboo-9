@@ -96,6 +96,25 @@ class AVLTree<K: Comparable<K>, V>: Tree<K, V, AVLNode<K, V>>() {
         return balancing(node)
     }
 
+    private fun deleteMY(root :AVLNode<K, V>, node: AVLNode<K, V>){
+        if(root.leftChild === node){
+            root.leftChild = null
+            return
+        }
+        if(root.rightChild === node){
+            root.rightChild = null
+            return
+        }
+        val left = root.leftChild
+        val right = root.rightChild
+        if(left != null){
+            deleteMY(left,node)
+        }
+        if(right != null){
+            deleteMY(right,node)
+        }
+    }
+
     private fun insertAVL(node : AVLNode<K,V>?, key: K, newValue: V) : AVLNode<K,V>{
         if(node == null){
             val newNode = AVLNode(key,newValue)
@@ -131,12 +150,23 @@ class AVLTree<K: Comparable<K>, V>: Tree<K, V, AVLNode<K, V>>() {
         else{
             val leftNode = node.leftChild
             val rightNode = node.rightChild
+            val rootTree = root
+            rootTree ?: throw Exception("tree without root")
+            node.leftChild = null
+            node.rightChild = null
+            deleteMY(rootTree, node)
             if(rightNode == null){
+                if(node === root){
+                    root = leftNode
+                }
                 return leftNode
             }
             val minNode = findMin(rightNode)
             minNode.rightChild = removeMin(rightNode)
             minNode.leftChild = leftNode
+            if(node === root){
+                root = balancing(minNode)
+            }
             return balancing(minNode)
         }
         return balancing(node)
