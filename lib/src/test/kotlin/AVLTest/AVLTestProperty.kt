@@ -1,3 +1,4 @@
+
 import nodes.AVLNode
 import trees.AVLTree
 import kotlin.math.abs
@@ -13,6 +14,8 @@ class AVLTestProperty {
     class Flag(var flagOfBalance: Boolean = true)
 
     class MaxHeight(var height: Int = 0, var key: Int = 0)
+
+    class CountNodes(var count : Int = 0)
 
     private fun check_correct_left_and_right_sun(node: AVLNode<Int, Int>): Boolean {
         val left = node.leftChild
@@ -87,8 +90,32 @@ class AVLTestProperty {
         }
     }
 
+    fun count_size_tree(root: AVLNode<Int, Int>, countNodes : CountNodes){
+        countNodes.count++
+        val left = root.leftChild
+        val right = root.rightChild
+        if(left != null){
+            count_size_tree(left,countNodes)
+        }
+        if(right != null){
+            count_size_tree(right,countNodes)
+        }
+    }
+
     fun check_size(tree: AVLTree<Int, Int>, correctSize: Int): Boolean {
         if (tree.size != correctSize) {
+            return false
+        }
+        val countNodes = CountNodes()
+        val root = tree.root
+        if(root == null && correctSize == 0){
+            return true
+        }
+        else if(root == null){
+            return false
+        }
+        count_size_tree(root, countNodes)
+        if(countNodes.count != correctSize){
             return false
         }
         return true
@@ -148,7 +175,7 @@ class AVLTestProperty {
                         check_correct_binary_search_tree(root) && check_correct_AVL(root)){
                     test = true
                 }
-                assertEquals(test,true)
+                assertEquals(test,true, "failed insert")
             }
 
 
@@ -156,7 +183,7 @@ class AVLTestProperty {
             for(j in 1..1000){
                 val key = Random.nextInt(1,100)
                 if(keys.contains(key)){
-                    assertNotEquals(tree.find(key), null)
+                    assertNotEquals(tree.find(key), null, "failed find")
                 }
                 else{
                     assertEquals(tree.find(key), null)
@@ -181,11 +208,7 @@ class AVLTestProperty {
                     check_correct_binary_search_tree(root) && check_correct_AVL(root)){
                     test = true
                 }
-                assertEquals(test,true,"${check_size(tree,count_of_keys)}" +
-                        " ${(root != null) && check_correct_binary_search_tree(root)} " +
-                        "${(root != null) && check_correct_AVL(root)} " +
-                        "${keys.contains(key)} " +
-                        "${tree.size} ${count_of_keys} ${keys.size} ${tree.find(key)} ${tree.root?.key}")
+                assertEquals(test,true, "failed remove ${check_size(tree,count_of_keys)}")
             }
         }
     }
