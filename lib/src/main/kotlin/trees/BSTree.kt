@@ -26,10 +26,11 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
                     } else currNode = currNode.rightChild ?: return
                 } else {
                     currNode.value = newValue
-                    isAncFound = true
+                    return
                 }
             }
         }
+        size++
     }
 
     override fun remove(key: K) {
@@ -53,19 +54,25 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
         if (parent.key > key) isLeft = true
 
         if (removingNode.leftChild == null && removingNode.rightChild == null) {
+            if(key == root?.key) root = null
+
             if (isLeft) parent.leftChild = null
             else parent.rightChild = null
         } else if (removingNode.leftChild != null && removingNode.rightChild == null) {
+            if(key == root?.key) root = removingNode.leftChild
+
             if (isLeft) parent.leftChild = removingNode.leftChild
             else parent.rightChild = removingNode.leftChild
         } else if (removingNode.rightChild != null && removingNode.leftChild == null) {
+            if(key == root?.key) root = removingNode.rightChild
+
             if (isLeft) parent.leftChild = removingNode.rightChild
             else parent.rightChild = removingNode.rightChild
         } else {
-            if (removingNode.rightChild?.leftChild == null) {
+            if (removingNode.rightChild?.leftChild == null) {                       /*WTF is this*/
                 removingNode.rightChild?.leftChild = removingNode.leftChild
                 if (key == root?.key) {
-                    root = removingNode.rightChild
+                    root = root?.rightChild
                 } else {
                     parent.rightChild = removingNode
                 }

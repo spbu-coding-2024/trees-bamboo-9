@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4153b75b-4692-4324-af77-5385973c91fa" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/main/kotlin/trees/BSTree.kt" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/main/kotlin/trees/BSTree.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/src/main/kotlin/trees/Tree.kt" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/main/kotlin/trees/Tree.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -47,6 +49,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Kotlin File" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
@@ -54,9 +57,11 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/lib/src/main/kotlin/nodes/BSNode.kt" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/lib/src/main/kotlin/nodes/Node.kt" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/lib/src/main/kotlin/trees/BSTree.kt" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/lib/src/main/kotlin/trees/Tree.kt" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/lib/src/test/kotlin/BSTreeTest.kt" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -71,14 +76,16 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Gradle.BSTreeTest.executor": "Run",
     "Gradle.Build trees-bamboo-9-origin.executor": "Run",
     "Gradle.Upgrade Gradle wrapper.executor": "Run",
+    "JUnit.BSInsertTest and 1 more.executor": "Run",
     "Kotlin.MainKt.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "BSTree",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/qjolk/trees-bamboo-9-origin",
+    "last_opened_file_path": "/home/qjolk/tests-workshop/lib/src/test/kotlin/org/example/SorterTest.kt",
     "onboarding.tips.debug.path": "/home/qjolk/trees-bamboo-9/lib/src/main/kotlin/Main.kt",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
