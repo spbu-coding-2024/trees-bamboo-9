@@ -1,204 +1,197 @@
-package AVLTest
 
+
+import org.junit.jupiter.api.Test
 import trees.AVLTree
 import nodes.AVLNode
-import trees.Tree
-import kotlin.math.abs
+import kotlin.test.assertEquals
 
-fun init_tree(vararg keys: Int) : AVLTree<Int,Int>{
-    val tree = AVLTree<Int,Int>()
-    for(i in keys){
-        tree.insert(i,i)
-    }
-    return tree
-}
+class AVLTestModul {
 
-fun check_size(tree : AVLTree<Int,Int>, correctSize : Int) : Boolean{
-    if(tree.size != correctSize){
-        return false
-    }
-    return true
-}
+    class CorrectNode(
+        val key : Int?,
+        val value: Int?,
+        val keyLeft : Int?,
+        val valueLeft: Int?,
+        val keyRight : Int?,
+        val valueRight: Int?
+    )
 
+    class Flag(var flagOfEquals: Boolean = true, var lastNode : Int = 0)
 
-fun check_correct_binary_search_tree(root : AVLNode<Int,Int>) : Boolean{
-    if(check_correct_left_and_right_sun(root)){
-        val left = root.leftChild
-        val right = root.rightChild
-        if(left != null && right != null){
-            return check_correct_binary_search_tree(left)
-                    && check_correct_binary_search_tree(right)
-        }
-        else if(left != null){
-            return check_correct_binary_search_tree(left)
-        }
-        else if(right != null){
-            return check_correct_binary_search_tree(right)
-        }
-        else{
+    fun equalsTree(tree: AVLTree<Int,Int>, correctTree : ArrayDeque<CorrectNode>) : Boolean{
+        val root = tree.root
+        if(root == null && correctTree.isEmpty()){
             return true
         }
-    }
-    return false
-}
-
-fun check_correct_left_and_right_sun(node : AVLNode<Int,Int>) : Boolean{
-    val left = node.leftChild
-    val right = node.rightChild
-    if(left != null){
-        if(left.key > node.key){
+        else if(root == null || correctTree.isEmpty()){
             return false
         }
+
+        val flagOfEquals = Flag()
+        equalsNode(root,correctTree,flagOfEquals)
+        return flagOfEquals.flagOfEquals
     }
-    if(right != null) {
-        if (right.key < node.key) {
-            return false
+
+    fun equalsNode(node : AVLNode<Int,Int>, correctTree : ArrayDeque<CorrectNode>,flagOfEquals: Flag){
+        val correctNode = correctTree[flagOfEquals.lastNode]
+        if(node.key != correctNode.key || node.value != correctNode.value){
+            flagOfEquals.flagOfEquals = false
+            return
+        }
+        val left = node.leftChild
+        val right = node.rightChild
+
+        if(left == null && correctNode.keyLeft != null){
+            flagOfEquals.flagOfEquals = false
+            return
+        }
+        else if(left != null && correctNode.keyLeft == null){
+            flagOfEquals.flagOfEquals = false
+            return
+        }
+        if(right == null && correctNode.keyRight != null){
+            flagOfEquals.flagOfEquals = false
+            return
+        }
+        else if(right != null && correctNode.keyRight == null){
+            flagOfEquals.flagOfEquals = false
+            return
+        }
+
+        if(left?.key == correctNode.keyLeft && right?.key == correctNode.keyRight &&
+            left?.value == correctNode.valueLeft && right?.value == correctNode.valueRight){
+            if(left != null) {
+                flagOfEquals.lastNode++
+                equalsNode(left, correctTree, flagOfEquals)
+            }
+            if(right != null) {
+                flagOfEquals.lastNode++
+                equalsNode(right, correctTree, flagOfEquals)
+            }
+        }
+        else{
+            flagOfEquals.flagOfEquals = false
+            return
         }
     }
-    return true
-}
-class Flag(var flagOfBalance : Boolean)
 
-fun check_balance(root: AVLNode<Int, Int>) : Boolean{
-    val mapOfHeight = HashMap<Int,Int>()
-    calculate_height_of_all_nodes(root, 1, mapOfHeight)
-    val flagOfBalance = Flag(true)
-    check_balance_of_node(root,mapOfHeight,flagOfBalance)
-    if(!flagOfBalance.flagOfBalance){
-        return false
+    @Test
+    fun test_simple_insert() {
+
     }
-    return true
-}
 
-fun check_balance_of_node(node: AVLNode<Int, Int>, map: HashMap<Int, Int>, flag: Flag){
-    val left = node.leftChild
-    val right = node.rightChild
-    var heightLeft = 0
-    var heightRight = 0
-    if(left != null){
-        heightLeft = map.get(left.key) ?: 0
+    @Test
+    fun test_left_rotation_insert() {
+
     }
-    if(right != null){
-        heightRight = map.get(right.key) ?: 0
+
+    @Test
+    fun test_right_rotation_insert() {
+
     }
-    if(abs(heightLeft - heightRight) > 1){
-        flag.flagOfBalance = false
+
+    @Test
+    fun test_big_left_rotation_insert() {
+
     }
-    else{
-        if(left != null){
-            check_balance_of_node(left,map,flag)
-        }
-        if(right != null){
-            check_balance_of_node(right,map,flag)
-        }
+
+    @Test
+    fun test_big_right_rotation_insert() {
+
+    }
+
+    @Test
+    fun test_all_ot_off_rotation_insert() {
+
+    }
+
+    @Test
+    fun test_remove_without_right_node() {
+
+    }
+
+    @Test
+    fun test_remove_with_right_node() {
+
+    }
+
+    @Test
+    fun test_left_rotation_remove() {
+
+    }
+
+    @Test
+    fun test_right_rotation_remove() {
+
+    }
+
+    @Test
+    fun test_big_left_rotation_remove() {
+
+    }
+
+    @Test
+    fun test_big_right_rotation_remove() {
+
+    }
+
+    @Test
+    fun test_all_ot_off_rotation_remove() {
+
+    }
+
+    @Test
+    fun test_remove_root() {
+
+
+        val tree = AVLTree<Int, Int>()
+        tree.insert(5,5)
+        tree.insert(6,4)
+        tree.insert(3,3)
+        tree.insert(10,2)
+        tree.insert(2,1)
+        tree.remove(5)
+
+
+        val correctTree = ArrayDeque<CorrectNode>()
+        correctTree.add(CorrectNode(6,4,3,3,10,2))
+        correctTree.add(CorrectNode(3,3,2,1,null,null))
+        correctTree.add(CorrectNode(2,1,null,null,null,null))
+        correctTree.add(CorrectNode(10,2,null,null,null,null))
+
+
+        assertEquals(equalsTree(tree,correctTree),true)
+    }
+
+    @Test
+    fun test_remove_only_left() {
+
+    }
+
+    @Test
+    fun test_remove_only_right() {
+
+    }
+
+    @Test
+    fun test_remove_one_right() {
+
+    }
+
+    @Test
+    fun test_basic_find() {
+
+    }
+
+    @Test
+    fun test_find_root() {
+
+    }
+
+    @Test
+    fun test_find_element_that_not_in_tree() {
+
     }
 }
 
 
-fun calculate_height_of_all_nodes(root: AVLNode<Int, Int>, height : Int, map : HashMap<Int,Int>){
-    map.put(root.key,height)
-    val left = root.leftChild
-    val right = root.rightChild
-    if(left != null){
-        calculate_height_of_all_nodes(left,height + 1, map)
-    }
-    if(right != null){
-        calculate_height_of_all_nodes(right, height + 1, map)
-    }
-}
-
-fun check_correct_tree(){
-
-}
-
-fun test_simple_insert() : Boolean{
-
-
-}
-
-fun test_left_rotation_insert() : Boolean{
-
-}
-
-fun test_right_rotation_insert() : Boolean{
-
-}
-
-fun test_big_left_rotation_insert() : Boolean{
-
-}
-
-fun test_big_right_rotation_insert() : Boolean{
-
-}
-
-fun test_all_ot_off_rotation_insert() : Boolean{
-
-}
-
-fun test_remove_without_right_node() : Boolean{
-
-}
-
-fun test_remove_with_right_node() : Boolean{
-
-}
-
-fun test_left_rotation_remove() : Boolean{
-
-}
-
-fun test_right_rotation_remove() : Boolean{
-
-}
-
-fun test_big_left_rotation_remove() : Boolean{
-
-}
-
-fun test_big_right_rotation_remove() : Boolean{
-
-}
-
-fun test_all_ot_off_rotation_remove() : Boolean{
-
-}
-
-fun test_remove_root() : Boolean{
-
-}
-fun test_basic_find() : Boolean{
-
-}
-
-fun test_find_root() : Boolean{
-
-}
-
-fun test_find_element_that_not_in_tree() : Boolean{
-
-}
-
-
-fun main(){
-    test_simple_insert()
-    test_left_rotation_insert()
-    test_right_rotation_insert()
-    test_big_left_rotation_insert()
-    test_big_right_rotation_insert()
-    test_all_ot_off_rotation_insert()
-
-
-    test_remove_without_right_node()
-    test_remove_with_right_node()
-    test_left_rotation_remove()
-    test_right_rotation_remove()
-    test_big_left_rotation_remove()
-    test_big_right_rotation_remove()
-    test_all_ot_off_rotation_remove()
-    test_remove_root()
-
-    test_basic_find()
-    test_find_root()
-    test_find_element_that_not_in_tree()
-}
