@@ -3,6 +3,7 @@ package trees
 import nodes.BSNode
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import kotlin.math.exp
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
@@ -98,7 +99,7 @@ class BSInsertTest {
     }
 }
 
-class BSFindTest {
+class BSRemoveTest {
     @Test
     fun `remove root wthout children`() {
         val testTree: BSTree<Int, Int> = BSTree()
@@ -152,5 +153,51 @@ class BSFindTest {
         expectedResult.root?.leftChild = BSNode(1, 1)
 
         assert(compareTrees(testTree, expectedResult))
+    }
+
+    @Test
+    fun `remove with right child without left child`() {
+        val testTree: BSTree<Int, Int> = BSTree()
+        testTree.insert(1, 1)
+        testTree.insert(2, 2)
+        testTree.insert(3, 3)
+        testTree.remove(2)
+
+        val expectedResult: BSTree<Int, Int> = BSTree()
+        expectedResult.size = 2
+        expectedResult.root = BSNode(1, 1)
+        expectedResult.root?.rightChild = BSNode(3, 3)
+
+        assert(compareTrees(testTree, expectedResult))
+    }
+
+    @Test
+    fun `remove with both children and with left child by right child`() {
+        val testTree: BSTree<Double, String> = BSTree()
+        testTree.insert(1.0, "!")
+        testTree.insert(3.0, "?")
+        testTree.insert(4.0, "{")
+        testTree.insert(2.0, "}")
+        testTree.insert(3.5, "?!?!?!")
+        testTree.remove(3.0)
+
+
+        val expectedResult: BSTree<Double, String> = BSTree()
+        expectedResult.size = 4
+        expectedResult.root = BSNode(1.0, "!")
+        expectedResult.root?.rightChild = BSNode(3.5, "?!?!?!")
+        expectedResult.root?.rightChild?.leftChild = BSNode(2.0, "}")
+        expectedResult.root?.rightChild?.rightChild = BSNode(4.0, "{")
+
+        assert(compareTrees(testTree, expectedResult))
+    }
+
+    @Test
+    fun `remove key not in tree`() {
+        val testTree: BSTree<Int, Int> = BSTree()
+        testTree.insert(1, 1)
+        assertThrows<java.lang.Exception>("Key not in tree") {
+            testTree.remove(2)
+        }
     }
 }

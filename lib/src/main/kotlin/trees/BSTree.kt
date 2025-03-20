@@ -18,12 +18,12 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
                     if (currNode.leftChild == null) {
                         currNode.leftChild = newNode
                         isAncFound = true
-                    } else currNode = currNode.leftChild ?: return
+                    } else currNode = currNode.leftChild ?: throw Exception("Non-null object became null")
                 } else if (key > currNode.key) {
                     if (currNode.rightChild == null) {
                         currNode.rightChild = newNode
                         isAncFound = true
-                    } else currNode = currNode.rightChild ?: return
+                    } else currNode = currNode.rightChild ?: throw Exception("Non-null object became null")
                 } else {
                     currNode.value = newValue
                     return
@@ -41,17 +41,16 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
         while (!isFound) {
             if (key > removingNode.key) {
                 parent = removingNode
-                removingNode = removingNode.rightChild ?: return
+                removingNode = removingNode.rightChild ?: throw Exception("Key not in tree")
             } else if (key < removingNode.key) {
                 parent = removingNode
-                removingNode = removingNode.leftChild ?: return
+                removingNode = removingNode.leftChild ?: throw Exception("Key not in tree")
             } else {
                 isFound = true
             }
         }
 
-        var isLeft = false
-        if (parent.key > key) isLeft = true
+        var isLeft = parent.key > key
 
         if (removingNode.leftChild == null && removingNode.rightChild == null) {
             if(key == root?.key) root = null
@@ -69,7 +68,7 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
             if (isLeft) parent.leftChild = removingNode.rightChild
             else parent.rightChild = removingNode.rightChild
         } else {
-            if (removingNode.rightChild?.leftChild == null) {                       /*WTF is this*/
+            if (root?.rightChild?.rightChild?.leftChild == null) {
                 removingNode.rightChild?.leftChild = removingNode.leftChild
                 if (key == root?.key) {
                     root = root?.rightChild
@@ -80,12 +79,12 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
                 return
             }
 
-            var replacement = removingNode.rightChild ?: return
+            var replacement = removingNode.rightChild ?: throw Exception("Non-null object became null")
             var rpParent = removingNode
 
             while (replacement.leftChild != null) {
                 rpParent = replacement
-                replacement = replacement.leftChild ?: return
+                replacement = replacement.leftChild ?: throw Exception("Non-null object became null")
             }
 
             rpParent.leftChild = replacement.rightChild
