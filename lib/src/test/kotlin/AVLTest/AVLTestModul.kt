@@ -479,6 +479,8 @@ class AVLTestModul {
         tree.insert(3,3)
         tree.insert(10,2)
         tree.insert(2,1)
+
+
         tree.remove(5)
 
 
@@ -495,17 +497,84 @@ class AVLTestModul {
 
     @Test
     fun test_basic_find() {
+        val tree = AVLTree<Int,Int>()
+        tree.insert(87,92)
+        tree.insert(31,932)
+        tree.insert(42,74)
+        tree.insert(64,866)
+        tree.insert(73,3984)
+        tree.insert(95,30)
+        tree.insert(24,27587)
+        tree.insert(29,288)
+        tree.insert(5,4099)
+        tree.insert(78,4984)
+        tree.insert(58,50095)
+        tree.insert(28,85)
+        tree.insert(43,95)
+        tree.insert(3,598)
+        tree.insert(57,59)
 
+
+        assertEquals(tree.find(87), 92)
+        assertEquals(tree.find(31), 932)
+        assertEquals(tree.find(64), 866)
+        assertEquals(tree.find(73), 3984)
+        assertEquals(tree.find(95), 30)
+        assertEquals(tree.find(24), 27587)
+        assertEquals(tree.find(29), 288)
+        assertEquals(tree.find(5), 4099)
+        assertEquals(tree.find(78), 4984)
+        assertEquals(tree.find(58), 50095)
+        assertEquals(tree.find(28), 85)
+        assertEquals(tree.find(43), 95)
+        assertEquals(tree.find(3), 598)
+        assertEquals(tree.find(57), 59)
     }
 
     @Test
     fun test_find_root() {
+        val tree = AVLTree<Int,Int>()
+        tree.insert(87,92)
+        tree.insert(31,932)
+        tree.insert(42,74)
+        tree.insert(64,866)
+        tree.insert(73,3984)
+        tree.insert(95,30)
+        tree.insert(24,27587)
+        tree.insert(29,288)
+        tree.insert(5,4099)
+        tree.insert(78,4984)
+        tree.insert(58,50095)
+        tree.insert(28,85)
+        tree.insert(43,95)
+        tree.insert(3,598)
+        tree.insert(57,59)
 
+
+        assertEquals(tree.find(42), 74)
     }
 
     @Test
     fun test_find_element_that_not_in_tree() {
+        val tree = AVLTree<Int,Int>()
+        tree.insert(87,92)
+        tree.insert(31,932)
+        tree.insert(42,74)
+        tree.insert(64,866)
+        tree.insert(73,3984)
+        tree.insert(95,30)
+        tree.insert(24,27587)
+        tree.insert(29,288)
+        tree.insert(5,4099)
+        tree.insert(78,4984)
+        tree.insert(58,50095)
+        tree.insert(28,85)
+        tree.insert(43,95)
+        tree.insert(3,598)
+        tree.insert(57,59)
 
+
+        assertEquals(tree.find(100), null)
     }
 }
 
