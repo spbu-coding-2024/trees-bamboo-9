@@ -494,6 +494,42 @@ class AVLTestModul {
         assertEquals(equalsTree(tree,correctTree),true)
     }
 
+    @Test
+    fun test_remove_root_without_right_node(){
+        val tree = AVLTree<Int, Int>()
+        tree.insert(5,5)
+        tree.insert(2,2)
+
+        tree.remove(5)
+
+        val correctTree = ArrayDeque<CorrectNode>()
+        correctTree.add(CorrectNode(2,2,null,null,null,null))
+    }
+
+    @Test
+    fun test_remove_key_not_in_the_tree() {
+        val tree = AVLTree<Int,Int>()
+        tree.insert(10,10)
+        tree.insert(20,20)
+        tree.insert(5,5)
+        tree.insert(15,15)
+        tree.insert(25,25)
+
+
+        tree.remove(100)
+
+
+        val correctTree = ArrayDeque<CorrectNode>()
+        correctTree.add(CorrectNode(10,10,5,5,20,20))
+        correctTree.add(CorrectNode(5,5,null,null,null,null))
+        correctTree.add(CorrectNode(20,20,15,15,25,25))
+        correctTree.add(CorrectNode(15,15,null,null,null,null))
+        correctTree.add(CorrectNode(25,25,null,null,null,null))
+
+
+        assertEquals(equalsTree(tree,correctTree),true)
+    }
+
 
     @Test
     fun test_basic_find() {

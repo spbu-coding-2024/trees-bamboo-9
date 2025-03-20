@@ -55,10 +55,7 @@ class AVLTree<K: Comparable<K>, V>: Tree<K, V, AVLNode<K, V>>() {
         return y
     }
 
-    private fun getBalance(node : AVLNode<K,V>?) : Int{
-        if(node == null){
-            return 0
-        }
+    private fun getBalance(node : AVLNode<K,V>) : Int{
         return height(node.leftChild) - height(node.rightChild)
     }
 
@@ -148,6 +145,7 @@ class AVLTree<K: Comparable<K>, V>: Tree<K, V, AVLNode<K, V>>() {
             node.rightChild = removeAVL(node.rightChild, key)
         }
         else{
+            size--
             val leftNode = node.leftChild
             val rightNode = node.rightChild
             val rootTree = root
@@ -192,10 +190,7 @@ class AVLTree<K: Comparable<K>, V>: Tree<K, V, AVLNode<K, V>>() {
     }
 
     override fun remove(key: K) {
-        if(find(key) != null) {
             removeAVL(root, key)
-            size--
-        }
     }
     override fun find(key: K): V? {
         val value = findAVL(root,key) ?: return null
