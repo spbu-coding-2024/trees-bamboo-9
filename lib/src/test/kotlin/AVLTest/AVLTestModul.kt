@@ -250,38 +250,225 @@ class AVLTestModul {
     }
 
     @Test
-    fun test_remove_without_right_node() {
+    fun test_remove_without_sons() {
+        val tree = AVLTree<Int,Int>()
+        tree.insert(10,10)
+        tree.insert(20,20)
+        tree.insert(5,5)
+        tree.insert(15,15)
+        tree.insert(25,25)
 
+
+        tree.remove(25)
+
+
+        val correctTree = ArrayDeque<CorrectNode>()
+        correctTree.add(CorrectNode(10,10,5,5,20,20))
+        correctTree.add(CorrectNode(5,5,null,null,null,null))
+        correctTree.add(CorrectNode(20,20,15,15,null,null))
+        correctTree.add(CorrectNode(15,15,null,null,null,null))
+
+
+        assertEquals(equalsTree(tree,correctTree),true)
+    }
+
+    @Test
+    fun test_remove_without_right_node() {
+        val tree = AVLTree<Int,Int>()
+        tree.insert(10,10)
+        tree.insert(20,20)
+        tree.insert(5,5)
+        tree.insert(15,15)
+        tree.insert(25,25)
+        tree.insert(3,3)
+
+
+        tree.remove(5)
+
+
+        val correctTree = ArrayDeque<CorrectNode>()
+        correctTree.add(CorrectNode(10,10,3,3,20,20))
+        correctTree.add(CorrectNode(3,3,null,null,null,null))
+        correctTree.add(CorrectNode(20,20,15,15,25,25))
+        correctTree.add(CorrectNode(15,15,null,null,null,null))
+        correctTree.add(CorrectNode(25,25,null,null,null,null))
+
+
+        assertEquals(equalsTree(tree,correctTree),true)
     }
 
     @Test
     fun test_remove_with_right_node() {
+        val tree = AVLTree<Int,Int>()
+        tree.insert(10,10)
+        tree.insert(20,20)
+        tree.insert(5,5)
+        tree.insert(15,15)
+        tree.insert(25,25)
+        tree.insert(3,3)
+        tree.insert(30,30)
+        tree.insert(22,22)
 
+
+        tree.remove(20)
+
+
+        val correctTree = ArrayDeque<CorrectNode>()
+        correctTree.add(CorrectNode(10,10,5,5,22,22))
+        correctTree.add(CorrectNode(5,5,3,3,null,null))
+        correctTree.add(CorrectNode(3,3,null,null,null,null))
+        correctTree.add(CorrectNode(22,22,15,15,25,25))
+        correctTree.add(CorrectNode(15,15,null,null,null,null))
+        correctTree.add(CorrectNode(25,25,null,null,30,30))
+        correctTree.add(CorrectNode(30,30,null,null,null,null))
+
+
+        assertEquals(equalsTree(tree,correctTree),true)
     }
 
     @Test
     fun test_left_rotation_remove() {
+        val tree = AVLTree<Int,Int>()
+        tree.insert(10,10)
+        tree.insert(20,20)
+        tree.insert(5,5)
+        tree.insert(15,15)
+        tree.insert(25,25)
 
+
+        tree.remove(5)
+
+
+        val correctTree = ArrayDeque<CorrectNode>()
+        correctTree.add(CorrectNode(20,20,10,10,25,25))
+        correctTree.add(CorrectNode(10,10,null,null,15,15))
+        correctTree.add(CorrectNode(15,15,null,null,null,null))
+        correctTree.add(CorrectNode(25,25,null,null,null,null))
+
+
+        assertEquals(equalsTree(tree,correctTree),true)
     }
 
     @Test
     fun test_right_rotation_remove() {
+        val tree = AVLTree<Int,Int>()
+        tree.insert(10,10)
+        tree.insert(20,20)
+        tree.insert(5,5)
+        tree.insert(15,15)
+        tree.insert(25,25)
+        tree.insert(3,3)
 
+
+        tree.remove(15)
+        tree.remove(25)
+        tree.remove(20)
+
+
+        val correctTree = ArrayDeque<CorrectNode>()
+        correctTree.add(CorrectNode(5,5,3,3,10,10))
+        correctTree.add(CorrectNode(3,3,null,null,null,null))
+        correctTree.add(CorrectNode(10,10,null,null,null,null))
+
+
+        assertEquals(equalsTree(tree,correctTree),true)
     }
 
     @Test
     fun test_big_left_rotation_remove() {
+        val tree = AVLTree<Int,Int>()
+        tree.insert(50,50)
+        tree.insert(40,40)
+        tree.insert(30,30)
+        tree.insert(20,20)
+        tree.insert(10,10)
+        tree.insert(35,35)
+        tree.insert(32,32)
 
+
+        tree.remove(10)
+
+
+        val correctTree = ArrayDeque<CorrectNode>()
+        correctTree.add(CorrectNode(35,35,30,30,40,40))
+        correctTree.add(CorrectNode(30,30,20,20,32,32))
+        correctTree.add(CorrectNode(20,20,null,null,null,null))
+        correctTree.add(CorrectNode(32,32,null,null,null,null))
+        correctTree.add(CorrectNode(40,40,null,null,50,50))
+        correctTree.add(CorrectNode(50,50,null,null,null,null))
+
+
+        assertEquals(equalsTree(tree,correctTree),true)
     }
 
     @Test
     fun test_big_right_rotation_remove() {
+        val tree = AVLTree<Int,Int>()
+        tree.insert(10,10)
+        tree.insert(20,20)
+        tree.insert(30,30)
+        tree.insert(40,40)
+        tree.insert(50,50)
+        tree.insert(25,25)
+        tree.insert(27,27)
 
+
+        tree.remove(50)
+
+
+        val correctTree = ArrayDeque<CorrectNode>()
+        correctTree.add(CorrectNode(25,25,20,20,30,30))
+        correctTree.add(CorrectNode(20,20,10,10,null,null))
+        correctTree.add(CorrectNode(10,10,null,null,null,null))
+        correctTree.add(CorrectNode(30,30,27,27,40,40))
+        correctTree.add(CorrectNode(27,27,null,null,null,null))
+        correctTree.add(CorrectNode(40,40,null,null,null,null))
+
+
+        assertEquals(equalsTree(tree,correctTree),true)
     }
 
     @Test
     fun test_all_ot_off_rotation_remove() {
+        val tree = AVLTree<Int,Int>()
+        tree.insert(87,87)
+        tree.insert(31,31)
+        tree.insert(42,42)
+        tree.insert(64,64)
+        tree.insert(73,73)
+        tree.insert(95,95)
+        tree.insert(24,24)
+        tree.insert(29,29)
+        tree.insert(5,5)
+        tree.insert(78,78)
+        tree.insert(58,58)
+        tree.insert(28,28)
+        tree.insert(43,43)
+        tree.insert(3,3)
+        tree.insert(57,57)
 
+
+        tree.remove(3)
+        tree.remove(28)
+        tree.remove(31)
+        tree.remove(95)
+        tree.remove(78)
+        tree.remove(64)
+        tree.remove(87)
+        tree.remove(5)
+        tree.remove(29)
+        tree.remove(42)
+        tree.remove(24)
+        tree.remove(73)
+
+
+        val correctTree = ArrayDeque<CorrectNode>()
+        correctTree.add(CorrectNode(57,57,43,43,58,58))
+        correctTree.add(CorrectNode(43,43,null,null,null,null))
+        correctTree.add(CorrectNode(58,58,null,null,null,null))
+
+
+        assertEquals(equalsTree(tree,correctTree),true)
     }
 
     @Test
@@ -305,20 +492,6 @@ class AVLTestModul {
         assertEquals(equalsTree(tree,correctTree),true)
     }
 
-    @Test
-    fun test_remove_only_left() {
-
-    }
-
-    @Test
-    fun test_remove_only_right() {
-
-    }
-
-    @Test
-    fun test_remove_one_right() {
-
-    }
 
     @Test
     fun test_basic_find() {
