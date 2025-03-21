@@ -81,6 +81,7 @@ class RBTTest {
             val b=tree.find(c)
             assertEquals(i,b)
             check_tree_balance(tree.root())
+            isBinarySearchTree(tree.root)
         }
         for (i in 1..10000) {
             val c= (1..1000).random()
@@ -88,8 +89,36 @@ class RBTTest {
             val b=tree.find(c)
             assertEquals(null,b)
             check_tree_balance(tree.root())
+            isBinarySearchTree(tree.root)
         }
     }
+
+    @Test
+    fun testIteratorOnIncreaseOrder(){
+        for (i in 1..10000) {
+            tree.insert(i,i)
+        }
+        val ar=Array<Int>(10000,{0})
+        var i=0
+        for (el in tree){
+            ar[i]=el.key
+            i++
+        }
+        for (i in 1..9999) {
+            assert(ar[i]>ar[i-1])
+        }
+    }
+
+    @Test
+    fun testIteratorWithNullRoot(){
+        var c=0
+        for (el in tree){
+            c++
+        }
+        assertEquals(0,c)
+    }
+
+
 
     private fun check_tree_balance(node: RBNode<Int,Int>?) : Int{
         if (node==null){
@@ -105,22 +134,36 @@ class RBTTest {
             }
         }
     }
-}
 
-
-fun find_min_tree_key(root: RBNode<Int,Int>): Int {
-    var currentNode: RBNode<Int,Int> = root
-    while (currentNode.leftChild != null) {
-        currentNode = currentNode.leftChild?:root
+    private fun find_min_tree_key(root: RBNode<Int,Int>): Int {
+        var currentNode: RBNode<Int,Int> = root
+        while (currentNode.leftChild != null) {
+            currentNode = currentNode.leftChild?:root
+        }
+        return currentNode.key
     }
-    return currentNode.key
-}
 
-fun find_max_tree_key(root: RBNode<Int,Int>): Int {
-    var currentNode: RBNode<Int,Int> = root
-    while (currentNode.rightChild != null) {
-        currentNode = currentNode.rightChild?:root
+    private fun find_max_tree_key(root: RBNode<Int,Int>): Int {
+        var currentNode: RBNode<Int,Int> = root
+        while (currentNode.rightChild != null) {
+            currentNode = currentNode.rightChild?:root
+        }
+        return currentNode.key
     }
-    return currentNode.key
+
+    private fun isBinarySearchTree(node: RBNode<Int,Int>?) {
+        if (node == null){return}
+        val leftChild = node.leftChild
+        val rightChild = node.rightChild
+        if (leftChild!=null){
+            assert(node.key>leftChild.key)
+            isBinarySearchTree(leftChild)
+        }
+        if(rightChild!=null){
+            assert(node.key<rightChild.key)
+            isBinarySearchTree(rightChild)
+        }
+    }
+
 }
 
