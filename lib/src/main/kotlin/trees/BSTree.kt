@@ -41,10 +41,10 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
         while (!isFound) {
             if (key > removingNode.key) {
                 parent = removingNode
-                removingNode = removingNode.rightChild ?: throw IllegalArgumentException("Key not in tree")
+                removingNode = removingNode.rightChild ?: throw NoSuchElementException("Key not in tree")
             } else if (key < removingNode.key) {
                 parent = removingNode
-                removingNode = removingNode.leftChild ?: throw IllegalArgumentException("Key not in tree")
+                removingNode = removingNode.leftChild ?: throw NoSuchElementException("Key not in tree")
             } else {
                 isFound = true
             }
