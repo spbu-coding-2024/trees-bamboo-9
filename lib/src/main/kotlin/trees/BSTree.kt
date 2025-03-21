@@ -9,7 +9,7 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
             size++
             return
         } else {
-            var currNode = root ?: return
+            var currNode = root ?: throw Exception("Non-null object became null")
             var isAncFound = false
             val newNode = BSNode(key, newValue)
 

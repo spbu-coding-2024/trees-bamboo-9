@@ -3,6 +3,8 @@ package trees
 import nodes.BSNode
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import kotlin.math.exp
+import kotlin.test.assertContentEquals
 
 
 fun <K : Comparable<K>, V> compareTrees(tree1: BSTree<K, V>, tree2: BSTree<K, V>): Boolean {
@@ -195,5 +197,41 @@ class BSRemoveTest {
         assertThrows<IllegalArgumentException>("Key not in tree") {
             testTree.remove(2)
         }
+    }
+}
+
+class IteratorTest {
+    @Test
+    fun `iterator test`() {
+        val testTree: BSTree<Int, Int> = BSTree()
+        testTree.insert(3, 3)
+        testTree.insert(2, 2)
+        testTree.insert(1, 1)
+        testTree.insert(4, 4)
+        testTree.insert(5, 5)
+
+        val expectedResult: Array<Int> = arrayOf(3, 2, 1, 4, 5)
+        val actualResult: Array<Int> = arrayOf(0, 0, 0, 0, 0)
+
+        var j = 0
+        for (i in testTree.iterator()) {
+            actualResult[j] = i.key
+            j++
+        }
+        assert(expectedResult contentEquals actualResult)
+    }
+
+    @Test
+    fun `iterator without root`() {
+        val testTree: BSTree<Int, Int> = BSTree()
+        val expectedResult: Array<Int> = arrayOf()
+        val actualResult: Array<Int> = arrayOf()
+
+        var j = 0
+        for (i in testTree.iterator()) {
+            actualResult[j] = i.key
+            j++
+        }
+        assertContentEquals(expectedResult, actualResult)
     }
 }
