@@ -41,10 +41,10 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
         while (!isFound) {
             if (key > removingNode.key) {
                 parent = removingNode
-                removingNode = removingNode.rightChild ?: throw Exception("Key not in tree")
+                removingNode = removingNode.rightChild ?: throw IllegalArgumentException("Key not in tree")
             } else if (key < removingNode.key) {
                 parent = removingNode
-                removingNode = removingNode.leftChild ?: throw Exception("Key not in tree")
+                removingNode = removingNode.leftChild ?: throw IllegalArgumentException("Key not in tree")
             } else {
                 isFound = true
             }
@@ -53,17 +53,17 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
         var isLeft = parent.key > key
 
         if (removingNode.leftChild == null && removingNode.rightChild == null) {
-            if(key == root?.key) root = null
+            if (key == root?.key) root = null
 
             if (isLeft) parent.leftChild = null
             else parent.rightChild = null
         } else if (removingNode.leftChild != null && removingNode.rightChild == null) {
-            if(key == root?.key) root = removingNode.leftChild
+            if (key == root?.key) root = removingNode.leftChild
 
             if (isLeft) parent.leftChild = removingNode.leftChild
             else parent.rightChild = removingNode.leftChild
         } else if (removingNode.rightChild != null && removingNode.leftChild == null) {
-            if(key == root?.key) root = removingNode.rightChild
+            if (key == root?.key) root = removingNode.rightChild
 
             if (isLeft) parent.leftChild = removingNode.rightChild
             else parent.rightChild = removingNode.rightChild

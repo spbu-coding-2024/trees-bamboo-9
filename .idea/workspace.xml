@@ -58,9 +58,9 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/lib/src/main/kotlin/nodes/BSNode.kt" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/lib/src/main/kotlin/nodes/Node.kt" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/lib/src/main/kotlin/trees/BSTree.kt" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/lib/src/main/kotlin/trees/BSTree.kt" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/lib/src/main/kotlin/trees/Tree.kt" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/lib/src/test/kotlin/BSTreeTest.kt" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/lib/src/test/kotlin/BSTreeTest.kt" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />

@@ -1,34 +1,30 @@
 package trees
 
 import nodes.BSNode
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import kotlin.math.exp
-import kotlin.test.assertFailsWith
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 
-fun <K: Comparable<K>, V> compareTrees(tree1: BSTree<K, V>, tree2: BSTree<K, V>): Boolean {
-    if(tree1.size != tree2.size) return false
+
+fun <K : Comparable<K>, V> compareTrees(tree1: BSTree<K, V>, tree2: BSTree<K, V>): Boolean {
+    if (tree1.size != tree2.size) return false
     val queue = ArrayDeque<BSNode<K, V>?>()
-    if(tree1.root == null && tree2.root == null) return true
+    if (tree1.root == null && tree2.root == null) return true
     queue.add(tree1.root)
     queue.add(tree2.root)
     var currNode1: BSNode<K, V>?
     var currNode2: BSNode<K, V>?
-    while(queue.isNotEmpty()) {
+    while (queue.isNotEmpty()) {
         currNode1 = queue.removeFirst()
         currNode2 = queue.removeFirst()
-        if(currNode1 != null) {
-            if(currNode2 != null) {
-                if(currNode1.key != currNode2.key || currNode1.value != currNode2.value) return false
+        if (currNode1 != null) {
+            if (currNode2 != null) {
+                if (currNode1.key != currNode2.key || currNode1.value != currNode2.value) return false
                 queue.add(currNode1.leftChild)
                 queue.add(currNode2.leftChild)
                 queue.add(currNode1.rightChild)
                 queue.add(currNode2.rightChild)
             } else return false
-        } else if(currNode2 != null) return false
+        } else if (currNode2 != null) return false
     }
     return true
 }
@@ -101,7 +97,7 @@ class BSInsertTest {
 
 class BSRemoveTest {
     @Test
-    fun `remove root wthout children`() {
+    fun `remove root without children`() {
         val testTree: BSTree<Int, Int> = BSTree()
         testTree.insert(1, 1)
         testTree.remove(1)
@@ -196,7 +192,7 @@ class BSRemoveTest {
     fun `remove key not in tree`() {
         val testTree: BSTree<Int, Int> = BSTree()
         testTree.insert(1, 1)
-        assertThrows<java.lang.Exception>("Key not in tree") {
+        assertThrows<IllegalArgumentException>("Key not in tree") {
             testTree.remove(2)
         }
     }
