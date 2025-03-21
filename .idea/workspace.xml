@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4153b75b-4692-4324-af77-5385973c91fa" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/src/main/kotlin/nodes/RBNode.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/main/kotlin/trees/RBT.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/main/kotlin/trees/Tree.kt" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/main/kotlin/trees/Tree.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/main/kotlin/trees/RBT.kt" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/main/kotlin/trees/RBT.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/test/kotlin/RBTTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/test/kotlin/RBTTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +62,13 @@
                 <item name="trees-bamboo-9" type="f1a62948:ProjectNode" />
                 <item name="lib" type="2d1252cf:ModuleNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="trees-bamboo-9" type="f1a62948:ProjectNode" />
+                <item name="lib" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="verification" type="c8890929:TasksNode$1" />
               </path>
             </expand>
@@ -91,41 +96,67 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.Build trees-bamboo-9.executor": "Run",
-    "Gradle.Upgrade Gradle wrapper.executor": "Run",
-    "Gradle.trees-bamboo-9 [build].executor": "Run",
-    "Gradle.trees-bamboo-9 [clean].executor": "Run",
-    "Gradle.trees-bamboo-9:lib [jacocoTestReport].executor": "Run",
-    "Gradle.trees-bamboo-9:lib [test].executor": "Run",
-    "Kotlin.BobaKt.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "RBTree",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/shama/projects_EVM/trees-bamboo-9/lib/src/main/kotlin/trees",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "onboarding.tips.debug.path": "/home/qjolk/trees-bamboo-9/lib/src/main/kotlin/Main.kt",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "Errors",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.Build trees-bamboo-9.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.RBTTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Upgrade Gradle wrapper.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.trees-bamboo-9 [build].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.trees-bamboo-9 [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.trees-bamboo-9:lib [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.trees-bamboo-9:lib [jacocoTestReport].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.trees-bamboo-9:lib [test].executor&quot;: &quot;Run&quot;,
+    &quot;Kotlin.BobaKt.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;RBTree&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/shama/projects_EVM/trees-bamboo-9/lib/src/main/kotlin/trees&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;/home/qjolk/trees-bamboo-9/lib/src/main/kotlin/Main.kt&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/lib/src/main/kotlin/trees" />
       <recent name="$PROJECT_DIR$/lib/src/main/kotlin/nodes" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.trees-bamboo-9:lib [jacocoTestReport]">
-    <configuration name="trees-bamboo-9 [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+  <component name="RunManager" selected="Gradle.trees-bamboo-9 [clean]">
+    <configuration name="RBTTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":lib:test" />
+            <option value="--tests" />
+            <option value="&quot;RBTTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="trees-bamboo-9 [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -136,7 +167,7 @@
         </option>
         <option name="taskNames">
           <list>
-            <option value="build" />
+            <option value="clean" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -147,10 +178,10 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="trees-bamboo-9 [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="trees-bamboo-9:lib [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/lib" />
         <option name="externalSystemIdString" value="GRADLE" />
         <option name="scriptParameters" />
         <option name="taskDescriptions">
@@ -213,27 +244,13 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="BobaKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="BobaKt" />
-      <module name="trees-bamboo-9.lib.main" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="BobaKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="BobaKt" />
-      <module name="trees-bamboo-9.lib.main" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.trees-bamboo-9:lib [jacocoTestReport]" />
-        <item itemvalue="Gradle.trees-bamboo-9:lib [test]" />
         <item itemvalue="Gradle.trees-bamboo-9 [clean]" />
-        <item itemvalue="Gradle.trees-bamboo-9 [build]" />
-        <item itemvalue="Kotlin.BobaKt" />
+        <item itemvalue="Gradle.trees-bamboo-9:lib [test]" />
+        <item itemvalue="Gradle.RBTTest" />
+        <item itemvalue="Gradle.trees-bamboo-9:lib [clean]" />
+        <item itemvalue="Gradle.trees-bamboo-9:lib [jacocoTestReport]" />
       </list>
     </recent_temporary>
   </component>
@@ -259,6 +276,10 @@
       <workItem from="1742277506781" duration="6788000" />
       <workItem from="1742287261899" duration="5412000" />
       <workItem from="1742312834240" duration="778000" />
+      <workItem from="1742330513319" duration="1136000" />
+      <workItem from="1742381209119" duration="3733000" />
+      <workItem from="1742394792014" duration="1074000" />
+      <workItem from="1742538820444" duration="327000" />
     </task>
     <servers />
   </component>
@@ -272,6 +293,11 @@
           <url>file://$PROJECT_DIR$/src/src/main/kotlin/Main.kt</url>
           <line>13</line>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/lib/src/main/kotlin/trees/boba.kt</url>
+          <line>34</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

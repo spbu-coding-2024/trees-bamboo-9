@@ -4,7 +4,11 @@ import nodes.*
 
 class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
     override fun find(key: K): V? {
+        if(root==null) return null
         val node = findNode(key)
+        if(node.key != key){
+            return null
+        }
         return node.value
     }
 
@@ -42,19 +46,19 @@ class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
         }
         if (node.rightChild==null && node.leftChild==null && !isBlackNode(node)) {
             deleteRedNode(node)
-        } else if (node.rightChild==null || node.leftChild==null) {
+        } else if (node.rightChild!=null || node.leftChild!=null && isBlackNode(node)) {
             deleteBlackNodeWithOneChild(node)
-        } else if (isBlackNode(node)) {
+        } else {
             deleteBlackNodeWithoutChildren(node)
         }
     }
 
-    protected fun initTree(firstKey: K, fvalue: V) {
+    private fun initTree(firstKey: K, fvalue: V) {
         root = RBNode(key = firstKey, value = fvalue)
         size++
     }
 
-    protected fun initNewNode(newKey: K, value: V): RBNode<K, V>? {
+    private fun initNewNode(newKey: K, value: V): RBNode<K, V>? {
         val newNode: RBNode<K, V> = findNode(newKey)
         if (newNode.key == newKey) {
             newNode.value = value
@@ -87,7 +91,7 @@ class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
 
     private fun balanceAfterInsert(node: RBNode<K, V>) {
         val parentNode: RBNode<K, V>? = node.parent
-        val uncleNode: RBNode<K, V>? = findUncleNode(parentNode)
+        val uncleNode: RBNode<K, V>? = findBrother(parentNode)
         if (isBlackNode(uncleNode)) {
             balanceIfBlackUncle(node)
         } else {
@@ -105,22 +109,22 @@ class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
 
     private fun deleteBlackNodeWithOneChild(node: RBNode<K, V>) {
         if (node.rightChild != null) {
-            val rch = node.rightChild
-            if (rch != null) {
-                val nn = universalSwap(node, rch)
-                nn.parent?.rightChild = null
+            val rightChild = node.rightChild
+            if (rightChild != null) {
+                val newNodeWithSameKey = swapNodes(node, rightChild)
+                newNodeWithSameKey.parent?.rightChild = null
             }
         } else {
-            val rch = node.leftChild
-            if (rch != null) {
-                val nn = universalSwap(node, rch)
-                nn.parent?.leftChild = null
+            val leftChild = node.leftChild
+            if (leftChild != null) {
+                val newNodeWithSameKey = swapNodes(node, leftChild)
+                newNodeWithSameKey.parent?.leftChild = null
             }
         }
     }
 
     private fun deleteBlackNodeWithoutChildren(node: RBNode<K, V>) {
-        newBalance(node)
+        balanceAfterRemove(node)
         if (node.parent?.leftChild?.key == node.key) {
             node.parent?.leftChild = null
         } else {
@@ -137,72 +141,67 @@ class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
     }
 
     private fun balanceIfRedUncle(node: RBNode<K, V>) {//сократи
-        val parentNode: RBNode<K, V>? = node.parent
-        val uncleNode: RBNode<K, V>? = findUncleNode(parentNode)
-        val grandFatherNode: RBNode<K, V>? = parentNode?.parent
-        uncleNode?.color = Color.BLACK
-        parentNode?.color = Color.BLACK
-        if (grandFatherNode != null) {
-            grandFatherNode.color = Color.RED
-            chekRoot(grandFatherNode)
+        val parent: RBNode<K, V>? = node.parent
+        val uncle: RBNode<K, V>? = findBrother(parent)
+        val grandFather: RBNode<K, V>? = parent?.parent
+        uncle?.color = Color.BLACK
+        parent?.color = Color.BLACK
+        if (grandFather != null) {
+            grandFather.color = Color.RED
+            checkNodeForRootAfterBalancing(grandFather)
         }
-        if (grandFatherNode!=null  && !isBlackNode(grandFatherNode.parent)) {
-            balanceAfterInsert(grandFatherNode)
+        if (grandFather!=null  && !isBlackNode(grandFather.parent)) {
+            balanceAfterInsert(grandFather)
         }
     }
 
     private fun balanceIfUncleRightChild(node: RBNode<K, V>) {
-        var parentNode: RBNode<K, V>? = node.parent
-        if (parentNode?.leftChild?.key != node.key) {
+        var parent: RBNode<K, V>? = node.parent
+        if (parent?.leftChild?.key != node.key) {
             rotateLeft(node)
-            parentNode = node
+            parent = node
         }
-        parentNode.color = Color.BLACK
-        parentNode.parent?.color = Color.RED
-        rotateRight(parentNode)
-        chekRoot(parentNode)
+        parent.color = Color.BLACK
+        parent.parent?.color = Color.RED
+        rotateRight(parent)
+        checkNodeForRootAfterBalancing(parent)
     }
 
     private fun balanceIfUncleLeftChild(node: RBNode<K, V>) {
-        var parentNode: RBNode<K, V>? = node.parent
-        if (parentNode?.rightChild?.key != node.key) {
+        var parent: RBNode<K, V>? = node.parent
+        if (parent?.rightChild?.key != node.key) {
             rotateRight(node)
-            parentNode = node
+            parent = node
         }
-        parentNode.color = Color.BLACK
-        parentNode.parent?.color = Color.RED
-        rotateLeft(parentNode)
-        chekRoot(parentNode)
+        parent.color = Color.BLACK
+        parent.parent?.color = Color.RED
+        rotateLeft(parent)
+        checkNodeForRootAfterBalancing(parent)
     }
 
-    private fun replaceNodeWithMaxNodeOfLeftSubtree(node: RBNode<K, V>, leftch: RBNode<K, V>): RBNode<K, V> {
-        var vsnode: RBNode<K, V> = leftch
-        var rch = vsnode.rightChild
-        while (rch != null) {
-            vsnode = rch
-            rch = vsnode.rightChild
+    private fun replaceNodeWithMaxNodeOfLeftSubtree(node: RBNode<K, V>, leftChild: RBNode<K, V>): RBNode<K, V> {
+        var currentNode: RBNode<K, V> = leftChild
+        var currentRightChild = currentNode.rightChild
+        while (currentRightChild != null) {
+            currentNode = currentRightChild
+            currentRightChild = currentNode.rightChild
         }
-        val newNode = universalSwap(node, vsnode)
-        return newNode
+        val nodeWithNewPlace = swapNodes(node, currentNode)
+        return nodeWithNewPlace
     }
 
-    private fun newBalance(node: RBNode<K, V>) {
+    private fun balanceAfterRemove(node: RBNode<K, V>) {
         if (node.parent == null) return
-        val bro:RBNode<K,V>?
-        if (isLeftChild(node)) {
-            bro=node.parent?.rightChild
-        } else {
-            bro=node.parent?.leftChild
-        }
-        if (bro != null) {
-            if (!isBlackNode(bro)) {
-                balanceIfRedBrother(bro)
-                newBalance(node)
+        val brother=findBrother(node)
+        if (brother != null) {
+            if (!isBlackNode(brother)) {
+                balanceIfRedBrother(brother)
+                balanceAfterRemove(node)
             } else {
-                if (isBlackNode(bro.leftChild) && isBlackNode(bro.rightChild)) {
-                    balanceIfBrotherHasTwoBlackChildren(bro)
+                if (isBlackNode(brother.leftChild) && isBlackNode(brother.rightChild)) {
+                    balanceIfBrotherHasTwoBlackChildren(brother)
                 } else {
-                    balanceIfBrotherHasOneRedChild(bro)
+                    balanceIfBrotherHasOneRedChild(brother)
                 }
             }
         }
@@ -212,88 +211,88 @@ class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
         return (node==null || (node.color == Color.BLACK))
     }
 
-    private fun balanceIfBrotherHasTwoBlackChildren(bro: RBNode<K, V>) {
-        bro.color = Color.RED
-        val par = bro.parent
-        if (par!=null) {
-            if (isBlackNode(par)) {
-                newBalance(par)
+    private fun balanceIfBrotherHasTwoBlackChildren(brother: RBNode<K, V>) {
+        brother.color = Color.RED
+        val parent = brother.parent
+        if (parent!=null) {
+            if (isBlackNode(parent)) {
+                balanceAfterRemove(parent)
             } else {
-                par.color = Color.BLACK
+                parent.color = Color.BLACK
             }
         }
 
     }
 
-    private fun balanceIfRedBrother(bro: RBNode<K, V>) {
-        bro.color = Color.BLACK
-        bro.parent?.color = Color.RED
-        if (isLeftChild(bro)) {
-            rotateRight(bro)
+    private fun balanceIfRedBrother(brother: RBNode<K, V>) {
+        brother.color = Color.BLACK
+        brother.parent?.color = Color.RED
+        if (isLeftChild(brother)) {
+            rotateRight(brother)
         } else {
-            rotateLeft(bro)
+            rotateLeft(brother)
         }
-        chekRoot(bro)
+        checkNodeForRootAfterBalancing(brother)
     }
 
-    private fun balanceIfBrotherHasOneRedChild(bro: RBNode<K, V>) {
-        if (isLeftChild(bro)) {
-            if (!isBlackNode(bro.leftChild)) {
-                fixik(bro)
-            } else if (!isBlackNode(bro.rightChild)) {
-                val rch = bro.rightChild
-                if (rch != null) {
-                    rch.color = Color.BLACK
-                    bro.color = Color.RED
-                    rotateLeft(rch)
-                    fixik(rch)
+    private fun balanceIfBrotherHasOneRedChild(brother: RBNode<K, V>) {
+        if (isLeftChild(brother)) {
+            if (!isBlackNode(brother.leftChild)) {
+                fixTreeIfBrotherLeftChild(brother)
+            } else if (!isBlackNode(brother.rightChild)) {
+                val rightChild = brother.rightChild
+                if (rightChild != null) {
+                    rightChild.color = Color.BLACK
+                    brother.color = Color.RED
+                    rotateLeft(rightChild)
+                    fixTreeIfBrotherLeftChild(rightChild)
                 }
             }
         } else {
-            if (!isBlackNode(bro.rightChild)) {
-                fixik2(bro)
-            } else if (!isBlackNode(bro.leftChild)) {
-                val lch = bro.leftChild
-                if (lch != null) {
-                    lch.color = Color.BLACK
-                    bro.color = Color.RED
-                    rotateRight(lch)
-                    fixik2(lch)
+            if (!isBlackNode(brother.rightChild)) {
+                fixTreeIfBrotherRightChild(brother)
+            } else if (!isBlackNode(brother.leftChild)) {
+                val leftChild = brother.leftChild
+                if (leftChild != null) {
+                    leftChild.color = Color.BLACK
+                    brother.color = Color.RED
+                    rotateRight(leftChild)
+                    fixTreeIfBrotherRightChild(leftChild)
                 }
             }
         }
     }
 
-    private fun universalSwap(node1: RBNode<K, V>, node2: RBNode<K, V>): RBNode<K, V> {
-        uswap(node1, node2.key, node2.value)
-        return uswap(node2, node1.key, node1.value)
+    private fun swapNodes(node1: RBNode<K, V>, node2: RBNode<K, V>): RBNode<K, V> {
+        makeNodeWithSameLinksAndCertainKey(node1, node2.key, node2.value)
+        return makeNodeWithSameLinksAndCertainKey(node2, node1.key, node1.value)
     }
 
-    private fun findUncleNode(parent: RBNode<K, V>?): RBNode<K, V>? {
-        if (isLeftChild(parent)) {
-            return parent?.parent?.rightChild
+    private fun findBrother(node: RBNode<K, V>?): RBNode<K, V>? {
+        if (isLeftChild(node)) {
+            return node?.parent?.rightChild
         } else {
-            return parent?.parent?.leftChild
+            return node?.parent?.leftChild
         }
     }
 
-    private fun fixik(bro: RBNode<K, V>) {
-        bro.color = bro.parent?.color ?: Color.BLACK
-        bro.parent?.color = Color.BLACK
-        bro.leftChild?.color = Color.BLACK
-        rotateRight(bro)
-        chekRoot(bro)
+    private fun fixTreeIfBrotherLeftChild(node: RBNode<K, V>) {
+        node.color = node.parent?.color ?: Color.BLACK
+        node.parent?.color = Color.BLACK
+        node.leftChild?.color = Color.BLACK
+        rotateRight(node)
+        checkNodeForRootAfterBalancing(node)
     }
 
-    private fun fixik2(bro: RBNode<K, V>) {
-        bro.color = bro.parent?.color ?: Color.BLACK
-        bro.parent?.color = Color.BLACK
-        bro.rightChild?.color = Color.BLACK
-        rotateLeft(bro)
-        chekRoot(bro)
+    private fun fixTreeIfBrotherRightChild(node: RBNode<K, V>) {
+        node.color = node.parent?.color ?: Color.BLACK
+        node.parent?.color = Color.BLACK
+        node.rightChild?.color = Color.BLACK
+        rotateLeft(node)
+        checkNodeForRootAfterBalancing(node)
     }
 
-    private fun chekRoot(node: RBNode<K, V>) {
+    private fun checkNodeForRootAfterBalancing(node: RBNode<K, V>) {
         if (node.parent == null) {
             root = node
             node.color = Color.BLACK
@@ -310,7 +309,7 @@ class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
         parent?.rightChild = node.leftChild
         node.leftChild = parent
         node.parent = parent?.parent
-        switchParrentsChild(isLeftChild(parent), node)
+        switchParentsChild(isLeftChild(parent), node)
         parent?.parent = node
     }
 
@@ -320,11 +319,11 @@ class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
         parent?.leftChild = node.rightChild
         node.rightChild = parent
         node.parent = parent?.parent
-        switchParrentsChild(isLeftChild(parent), node)
+        switchParentsChild(isLeftChild(parent), node)
         parent?.parent = node
     }
 
-    private fun switchParrentsChild(isLeftChild: Boolean, node: RBNode<K, V>) {
+    private fun switchParentsChild(isLeftChild: Boolean, node: RBNode<K, V>) {
         if (isLeftChild) {
             node.parent?.leftChild = node
         } else {
@@ -332,20 +331,20 @@ class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
         }
     }
 
-    private fun uswap(node1: RBNode<K, V>, nkey: K, nval: V): RBNode<K, V> {
+    private fun makeNodeWithSameLinksAndCertainKey(node: RBNode<K, V>, nkey: K, nval: V): RBNode<K, V> {
         val newNode = RBNode(nkey, nval)
-        newNode.color = node1.color
-        newNode.leftChild = node1.leftChild
-        newNode.rightChild = node1.rightChild
-        newNode.parent = node1.parent
+        newNode.color = node.color
+        newNode.leftChild = node.leftChild
+        newNode.rightChild = node.rightChild
+        newNode.parent = node.parent
         newNode.leftChild?.parent = newNode
         newNode.rightChild?.parent = newNode
-        if (isLeftChild(node1)) {
+        if (isLeftChild(node)) {
             newNode.parent?.leftChild = newNode
         } else {
             newNode.parent?.rightChild = newNode
         }
-        chekRoot(newNode)
+        checkNodeForRootAfterBalancing(newNode)
         return newNode
     }
 }
