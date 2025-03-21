@@ -33,7 +33,7 @@ class RBTTest {
             assertEquals(1, find_min_tree_key(root))
             assertEquals(10 , find_max_tree_key(root))
         }
-        check_tree_balance(tree.root())
+        check_tree_balance(tree.root)
     }
 
     @Test

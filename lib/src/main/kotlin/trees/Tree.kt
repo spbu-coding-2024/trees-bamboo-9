@@ -4,7 +4,9 @@ import nodes.Node
 
 abstract class Tree<K : Comparable<K>, V, treeNode : Node<K, V, treeNode>> : Iterable<treeNode> {
     internal var size: Int = 0
-    protected var root: treeNode? = null
+    var root: treeNode? = null
+        internal set
+        public get
 
     abstract fun insert(key: K, newValue: V)
 
