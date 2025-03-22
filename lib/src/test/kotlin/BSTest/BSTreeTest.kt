@@ -1,8 +1,9 @@
-package trees
+package BSTest
 
 import nodes.BSNode
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import trees.BSTree
 
 
 fun <K : Comparable<K>, V> compareTrees(tree1: BSTree<K, V>, tree2: BSTree<K, V>): Boolean {
