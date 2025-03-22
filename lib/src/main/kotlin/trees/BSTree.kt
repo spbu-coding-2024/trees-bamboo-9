@@ -44,27 +44,34 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
         var isLeft = parent.key > key
 
         if (rmNode.leftChild == null && rmNode.rightChild == null) {
-            if (key == root?.key) root = null
-
-            if (isLeft) parent.leftChild = null
-            else parent.rightChild = null
+            if (key == root?.key) {
+                root = null
+            } else {
+                if (isLeft) parent.leftChild = null
+                else parent.rightChild = null
+            }
         } else if (rmNode.leftChild != null && rmNode.rightChild == null) {
-            if (key == root?.key) root = rmNode.leftChild
-
-            if (isLeft) parent.leftChild = rmNode.leftChild
-            else parent.rightChild = rmNode.leftChild
+            if (key == root?.key) {
+                root = rmNode.leftChild
+            } else {
+                if (isLeft) parent.leftChild = rmNode.leftChild
+                else parent.rightChild = rmNode.leftChild
+            }
         } else if (rmNode.rightChild != null && rmNode.leftChild == null) {
-            if (key == root?.key) root = rmNode.rightChild
-
-            if (isLeft) parent.leftChild = rmNode.rightChild
-            else parent.rightChild = rmNode.rightChild
+            if (key == root?.key) {
+                root = rmNode.rightChild
+            } else {
+                if (isLeft) parent.leftChild = rmNode.rightChild
+                else parent.rightChild = rmNode.rightChild
+            }
         } else {
-            if (root?.rightChild?.rightChild?.leftChild == null) {
+            if (rmNode.rightChild?.leftChild == null) {
                 rmNode.rightChild?.leftChild = rmNode.leftChild
                 if (key == root?.key) {
                     root = root?.rightChild
                 } else {
-                    parent.rightChild = rmNode
+                    if (isLeft) parent.leftChild = rmNode.rightChild
+                    else parent.rightChild = rmNode.rightChild
                 }
                 size--
                 return
@@ -82,6 +89,9 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
             replacement.leftChild = rmNode.leftChild
             replacement.rightChild = rmNode.rightChild
 
+            if(key == root?.key) {
+                root = replacement
+            }
             if (isLeft) parent.leftChild = replacement
             else parent.rightChild = replacement
         }
