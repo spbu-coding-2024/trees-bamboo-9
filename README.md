@@ -40,6 +40,7 @@ or just build
 After that, the reports will appear in the folder lib/build:
 - **reports/tests/test/** with test success reports
 - **jacocoHTML/** with test coverage reports
+
 Open **index.html** in them to see all the reports
 ## License
 
