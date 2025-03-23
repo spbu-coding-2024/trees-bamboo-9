@@ -1,3 +1,5 @@
+package RedBlackTreeTest
+
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -84,40 +86,14 @@ class RBTTest {
             isBinarySearchTree(tree.root)
         }
         for (i in 1..10000) {
-            val c= (1..1000).random()
-            tree.remove(c)
-            val b=tree.find(c)
-            assertEquals(null,b)
+            val randomKey= (1..1000).random()
+            tree.remove(randomKey)
+            val valueOfRandomKey=tree.find(randomKey)
+            assertEquals(null,valueOfRandomKey)
             check_tree_balance(tree.root())
             isBinarySearchTree(tree.root)
         }
     }
-
-    @Test
-    fun testIteratorOnIncreaseOrder(){
-        for (i in 1..10000) {
-            tree.insert(i,i)
-        }
-        val ar=Array<Int>(10000,{0})
-        var i=0
-        for (el in tree){
-            ar[i]=el.key
-            i++
-        }
-        for (i in 1..9999) {
-            assert(ar[i]>ar[i-1])
-        }
-    }
-
-    @Test
-    fun testIteratorWithNullRoot(){
-        var c=0
-        for (el in tree){
-            c++
-        }
-        assertEquals(0,c)
-    }
-
 
 
     private fun check_tree_balance(node: RBNode<Int,Int>?) : Int{

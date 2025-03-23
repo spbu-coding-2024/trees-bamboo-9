@@ -53,12 +53,12 @@ class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
         }
     }
 
-    private fun initTree(firstKey: K, fvalue: V) {
+    private fun initTree(firstKey: K, fvalue: V) {//Make first node in Tree
         root = RBNode(key = firstKey, value = fvalue)
         size++
     }
 
-    private fun initNewNode(newKey: K, value: V): RBNode<K, V>? {
+    private fun initNewNode(newKey: K, value: V): RBNode<K, V>? {//Make New Node
         val newNode: RBNode<K, V> = findNode(newKey)
         if (newNode.key == newKey) {
             newNode.value = value
