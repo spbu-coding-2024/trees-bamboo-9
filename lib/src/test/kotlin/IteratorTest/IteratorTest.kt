@@ -1,0 +1,4 @@
+package IteratorTest
+
+class IteratorTest {
+}
