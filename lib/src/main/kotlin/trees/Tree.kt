@@ -16,9 +16,9 @@ abstract class Tree<K : Comparable<K>, V, treeNode : Node<K, V, treeNode>> : Ite
 
     override fun iterator(): Iterator<treeNode> {
         return object : Iterator<treeNode> {
-            var wasRootInQueue = false
-            val rootCopy = root
-            val queue: ArrayDeque<treeNode> = ArrayDeque()
+            private var wasRootInQueue = false
+            private val rootCopy = root
+            private val queue: ArrayDeque<treeNode> = ArrayDeque()
             override fun hasNext(): Boolean {
                 if (!wasRootInQueue) {
                     if (rootCopy != null) {
