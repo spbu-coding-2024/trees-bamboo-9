@@ -1,3 +1,5 @@
+package AVLTest
+
 import org.junit.jupiter.api.Test
 import trees.AVLTree
 import nodes.AVLNode

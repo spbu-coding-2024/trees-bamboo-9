@@ -1,8 +1,11 @@
+package AVLTest
+
 import nodes.AVLNode
+import org.junit.jupiter.api.RepeatedTest
 import trees.AVLTree
 import kotlin.math.abs
 
-import org.junit.jupiter.api.Test
+
 import kotlin.random.Random
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
@@ -157,66 +160,64 @@ class AVLTestProperty {
         return true
     }
 
-    @Test
+    @RepeatedTest(100)
     fun propertyTest() {
-        for (i in 1..1000) {
 
 
-            val count_of_nodes = Random.nextInt(1, 1000)
-            var count_of_nodes_in_tree = 0
-            val tree = AVLTree<Int, Int>()
-            val keys = HashSet<Int>()
+        val count_of_nodes = Random.nextInt(1, 1000)
+        var count_of_nodes_in_tree = 0
+        val tree = AVLTree<Int, Int>()
+        val keys = HashSet<Int>()
 
-            //test insert
-            for (j in 1..count_of_nodes) {
-                val key = Random.nextInt(1, 100)
-                val value = Random.nextInt(1, 100)
-                if (!keys.contains(key)) {
-                    keys.add(key)
-                    count_of_nodes_in_tree++
-                }
-                tree.insert(key, value)
-                val rootTree = tree.root
-                var test = false
-                if (check_size(tree, count_of_nodes_in_tree) && (rootTree != null) &&
-                    check_correct_binary_search_tree(rootTree) && check_correct_AVL(rootTree)
-                ) {
-                    test = true
-                }
-                assertEquals(test, true, "failed insert")
+        //test insert
+        for (j in 1..count_of_nodes) {
+            val key = Random.nextInt(1, 100)
+            val value = Random.nextInt(1, 100)
+            if (!keys.contains(key)) {
+                keys.add(key)
+                count_of_nodes_in_tree++
             }
-
-
-            //test find
-            for (j in 1..1000) {
-                val key = Random.nextInt(1, 100)
-                if (keys.contains(key)) {
-                    assertNotEquals(tree.find(key), null, "failed find")
-                } else {
-                    assertEquals(tree.find(key), null, "failed find")
-                }
+            tree.insert(key, value)
+            val rootTree = tree.root
+            var test = false
+            if (check_size(tree, count_of_nodes_in_tree) && (rootTree != null) &&
+                check_correct_binary_search_tree(rootTree) && check_correct_AVL(rootTree)
+            ) {
+                test = true
             }
+            assertEquals(test, true, "failed insert")
+        }
 
 
-            //test remove
-            for (j in 1..1000) {
-                var test = false
-                val rootTree = tree.root
-                val key = Random.nextInt(1, 100)
-                if (keys.contains(key)) {
-                    keys.remove(key)
-                    count_of_nodes_in_tree--
-                }
-                tree.remove(key)
-                if (count_of_nodes_in_tree == 0 && check_size(tree, count_of_nodes_in_tree) && rootTree == null) {
-                    test = true
-                } else if (check_size(tree, count_of_nodes_in_tree) && (rootTree != null) &&
-                    check_correct_binary_search_tree(rootTree) && check_correct_AVL(rootTree)
-                ) {
-                    test = true
-                }
-                assertEquals(test, true, "failed remove")
+        //test find
+        for (j in 1..1000) {
+            val key = Random.nextInt(1, 100)
+            if (keys.contains(key)) {
+                assertNotEquals(tree.find(key), null, "failed find")
+            } else {
+                assertEquals(tree.find(key), null, "failed find")
             }
+        }
+
+
+        //test remove
+        for (j in 1..1000) {
+            var test = false
+            val rootTree = tree.root
+            val key = Random.nextInt(1, 100)
+            if (keys.contains(key)) {
+                keys.remove(key)
+                count_of_nodes_in_tree--
+            }
+            tree.remove(key)
+            if (count_of_nodes_in_tree == 0 && check_size(tree, count_of_nodes_in_tree) && rootTree == null) {
+                test = true
+            } else if (check_size(tree, count_of_nodes_in_tree) && (rootTree != null) &&
+                check_correct_binary_search_tree(rootTree) && check_correct_AVL(rootTree)
+            ) {
+                test = true
+            }
+            assertEquals(test, true, "failed remove")
         }
     }
 }
