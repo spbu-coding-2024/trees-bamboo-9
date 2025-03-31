@@ -41,25 +41,55 @@ fun <K : Comparable<K>, V> compareTrees(tree1: BSTree<K, V>, tree2: BSTree<K, V>
 
 fun <K : Comparable<K>, V> isBinarySearchTree(tree: BSTree<K, V>): Boolean {
     val queue = ArrayDeque<BSNode<K, V>>()
-    if (tree.root == null) return true
+    var realSize = 0
+    val expectedSize = tree.size
+    if (tree.root == null) return expectedSize == 0
     queue.add(tree.root!!)
+    realSize++
     var currNode: BSNode<K, V>
     while (queue.isNotEmpty()) {
         currNode = queue.removeFirst()
         if (currNode.leftChild != null) {
-            if (currNode.key <= currNode.leftChild!!.key) {
-                return false
-            }
             queue.add(currNode.leftChild!!)
+            realSize++
         }
         if (currNode.rightChild != null) {
-            if (currNode.key >= currNode.rightChild!!.key) {
-                return false
-            }
             queue.add(currNode.rightChild!!)
+            realSize++
         }
     }
-    return true
+    if(!isBinarySearchTreeNode(tree.root!!)) return false
+    return realSize == expectedSize
+}
+
+fun <K : Comparable<K>, V> isBinarySearchTreeNode(node: BSNode<K, V>): Boolean {
+    val isLeftMore = if(node.leftChild == null) false else (node.key < findMaxChild(node.leftChild!!))
+    val isRightLess = if(node.rightChild == null) false else (node.key > findMinChild(node.rightChild!!))
+    return if(isRightLess || isLeftMore) false
+    else if(node.leftChild != null && node.rightChild != null) {
+        (isBinarySearchTreeNode(node.leftChild!!) && isBinarySearchTreeNode(node.rightChild!!))
+    }
+    else if(node.leftChild != null) {
+        (isBinarySearchTreeNode(node.leftChild!!))
+    }
+    else if(node.rightChild != null) {
+        (isBinarySearchTreeNode(node.rightChild!!))
+    }
+    else true
+}
+
+fun <K : Comparable<K>, V> findMinChild(node: BSNode<K, V>): K {
+    if(node.leftChild == null) return node.key
+    val newMin = findMinChild(node.leftChild!!)
+    return if (node.key > newMin) newMin
+    else node.key
+}
+
+fun <K : Comparable<K>, V> findMaxChild(node: BSNode<K, V>): K {
+    if(node.rightChild == null) return node.key
+    val newMax = findMaxChild(node.rightChild!!)
+    return if (node.key < newMax) newMax
+    else node.key
 }
 
 class BSInsertTest {
@@ -127,7 +157,7 @@ class BSInsertTest {
         assert(compareTrees(testTree, expectedResult))
     }
 
-    @RepeatedTest(3)
+    @RepeatedTest(20)
     fun `is binary search after inserts (Int-Int)`() {
         val testTree: BSTree<Int, Int> = BSTree()
         val nodeCount = Random.nextInt(0..100)
@@ -137,7 +167,7 @@ class BSInsertTest {
         assert(isBinarySearchTree(testTree))
     }
 
-    @RepeatedTest(3)
+    @RepeatedTest(20)
     fun `is binary search after inserts (String-String)`() {
         val testTree: BSTree<String, String> = BSTree()
         val nodeCount = Random.nextInt(0..100)
@@ -156,7 +186,7 @@ class BSInsertTest {
         assert(isBinarySearchTree(testTree))
     }
 
-    @RepeatedTest(3)
+    @RepeatedTest(20)
     fun `is binary search after inserts (Boolean-Double)`() {
         val testTree: BSTree<Boolean, Double> = BSTree()
         val nodeCount = Random.nextInt(0..100)
@@ -433,7 +463,7 @@ class BSRemoveTest {
         assert(compareTrees(testTree, expectedResult))
     }
 
-    @RepeatedTest(3)
+    @RepeatedTest(20)
     fun `is binary search after remove keys from tree`() {
         val testTree: BSTree<Int, Int> = BSTree()
         val nodeCount = Random.nextInt(0..100)
@@ -452,7 +482,7 @@ class BSRemoveTest {
         }
     }
 
-    @RepeatedTest(3)
+    @RepeatedTest(20)
     fun `is binary search after remove random key`() {
         val testTree: BSTree<Int, Int> = BSTree()
         val nodeCount = Random.nextInt(0..100)
