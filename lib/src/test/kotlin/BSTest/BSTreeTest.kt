@@ -63,17 +63,17 @@ fun <K : Comparable<K>, V> isBinarySearchTree(tree: BSTree<K, V>): Boolean {
 }
 
 fun <K : Comparable<K>, V> isBinarySearchTreeNode(node: BSNode<K, V>): Boolean {
-    val isLeftMore = if(node.leftChild == null) false else (node.key < findMaxChild(node.leftChild!!))
-    val isRightLess = if(node.rightChild == null) false else (node.key > findMinChild(node.rightChild!!))
+    val isLeftMore = if(node.leftChild == null) false else node.key < findMaxChild(node.leftChild!!)
+    val isRightLess = if(node.rightChild == null) false else node.key > findMinChild(node.rightChild!!)
     return if(isRightLess || isLeftMore) false
     else if(node.leftChild != null && node.rightChild != null) {
-        (isBinarySearchTreeNode(node.leftChild!!) && isBinarySearchTreeNode(node.rightChild!!))
+        isBinarySearchTreeNode(node.leftChild!!) && isBinarySearchTreeNode(node.rightChild!!)
     }
     else if(node.leftChild != null) {
-        (isBinarySearchTreeNode(node.leftChild!!))
+        isBinarySearchTreeNode(node.leftChild!!)
     }
     else if(node.rightChild != null) {
-        (isBinarySearchTreeNode(node.rightChild!!))
+        isBinarySearchTreeNode(node.rightChild!!)
     }
     else true
 }
