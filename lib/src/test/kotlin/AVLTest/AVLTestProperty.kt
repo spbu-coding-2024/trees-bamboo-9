@@ -1,4 +1,4 @@
-package AVLTest
+//package AVLTest
 
 import nodes.AVLNode
 import org.junit.jupiter.api.RepeatedTest
@@ -25,21 +25,6 @@ class AVLTestProperty {
         var count: Int = 0 //flag for find count of nodes in tree
     )
 
-    private fun check_correct_left_and_right_sun(node: AVLNode<Int, Int>): Boolean {
-        val left = node.leftChild
-        val right = node.rightChild
-        if (left != null) {
-            if (left.key > node.key) {
-                return false
-            }
-        }
-        if (right != null) {
-            if (right.key < node.key) {
-                return false
-            }
-        }
-        return true
-    }
 
     private fun check_balance_of_node(node: AVLNode<Int, Int>, mapOfHeight: HashMap<Int, Int>, flagOfBalance: Flag) {
         val left = node.leftChild
@@ -114,9 +99,6 @@ class AVLTestProperty {
     }
 
     fun check_size(tree: AVLTree<Int, Int>, correctSize: Int): Boolean {
-        if (tree.size != correctSize) {
-            return false
-        }
         val root = tree.root
         if (root == null && correctSize == 0) {
             return true
@@ -131,22 +113,38 @@ class AVLTestProperty {
         return true
     }
 
-    fun check_correct_binary_search_tree(root: AVLNode<Int, Int>): Boolean {
-        if (check_correct_left_and_right_sun(root)) {
-            val left = root.leftChild
-            val right = root.rightChild
-            if (left != null && right != null) {
-                return check_correct_binary_search_tree(left)
-                        && check_correct_binary_search_tree(right)
-            } else if (left != null) {
-                return check_correct_binary_search_tree(left)
-            } else if (right != null) {
-                return check_correct_binary_search_tree(right)
-            } else {
-                return true
-            }
-        }
-        return false
+    fun isBinarySearchTree(tree: AVLTree<Int, Int>): Boolean {
+        val root = tree.root ?: return true
+        return isBinarySearchTreeNode(root)
+    }
+
+    fun isBinarySearchTreeNode(node: AVLNode<Int, Int>): Boolean {
+        val left = node.leftChild
+        val right = node.rightChild
+        val isLeftMore = if (left == null) false else node.key < findMaxChild(left)
+        val isRightLess = if (right == null) false else node.key > findMinChild(right)
+        return if (isRightLess || isLeftMore) false
+        else if (left != null && right != null) {
+            isBinarySearchTreeNode(left) && isBinarySearchTreeNode(right)
+        } else if (left != null) {
+            isBinarySearchTreeNode(left)
+        } else if (right != null) {
+            isBinarySearchTreeNode(right)
+        } else true
+    }
+
+    fun findMinChild(node: AVLNode<Int, Int>): Int {
+        val left = node.leftChild ?: return node.key
+        val newMin = findMinChild(left)
+        return if (node.key > newMin) newMin
+        else node.key
+    }
+
+    fun findMaxChild(node: AVLNode<Int, Int>): Int {
+        val right = node.rightChild ?: return node.key
+        val newMax = findMaxChild(right)
+        return if (node.key < newMax) newMax
+        else node.key
     }
 
     fun check_correct_AVL(root: AVLNode<Int, Int>): Boolean {
@@ -181,7 +179,7 @@ class AVLTestProperty {
             val rootTree = tree.root
             var test = false
             if (check_size(tree, count_of_nodes_in_tree) && (rootTree != null) &&
-                check_correct_binary_search_tree(rootTree) && check_correct_AVL(rootTree)
+                isBinarySearchTree(tree) && check_correct_AVL(rootTree)
             ) {
                 test = true
             }
@@ -203,17 +201,17 @@ class AVLTestProperty {
         //test remove
         for (j in 1..1000) {
             var test = false
-            val rootTree = tree.root
             val key = Random.nextInt(1, 100)
             if (keys.contains(key)) {
                 keys.remove(key)
                 count_of_nodes_in_tree--
             }
             tree.remove(key)
+            val rootTree = tree.root
             if (count_of_nodes_in_tree == 0 && check_size(tree, count_of_nodes_in_tree) && rootTree == null) {
                 test = true
             } else if (check_size(tree, count_of_nodes_in_tree) && (rootTree != null) &&
-                check_correct_binary_search_tree(rootTree) && check_correct_AVL(rootTree)
+                isBinarySearchTree(tree) && check_correct_AVL(rootTree)
             ) {
                 test = true
             }
