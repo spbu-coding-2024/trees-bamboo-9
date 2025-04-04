@@ -294,7 +294,7 @@ class BSRemoveTest {
     fun `remove key not in tree by right`() {
         val testTree: BSTree<Int, Int> = BSTree()
         testTree.insert(1, 1)
-        assertThrows<NoSuchElementException>("Key not in tree") {
+        assertThrows<NoSuchElementException>("Key not in tree: 2") {
             testTree.remove(2)
         }
     }
@@ -303,7 +303,7 @@ class BSRemoveTest {
     fun `remove key not in tree by left`() {
         val testTree: BSTree<Int, Int> = BSTree()
         testTree.insert(1, 1)
-        assertThrows<NoSuchElementException>("Key not in tree") {
+        assertThrows<NoSuchElementException>("Key not in tree: 0") {
             testTree.remove(0)
         }
     }
@@ -361,7 +361,9 @@ class BSRemoveTest {
     @Test
     fun `remove with no nodes`() {
         val testTree: BSTree<Int, Int> = BSTree()
-        testTree.remove(1)
+        assertThrows<NoSuchElementException>("Key not in tree: 1") {
+            testTree.remove(1)
+        }
 
         val expectedResult: BSTree<Int, Int> = BSTree()
         assert(compareTrees(testTree, expectedResult))
@@ -501,7 +503,7 @@ class BSRemoveTest {
                 keys.remove(key)
                 assert(isBinarySearchTree(testTree))
             } else {
-                assertThrows<NoSuchElementException>("Key not in tree") {
+                assertThrows<NoSuchElementException>("Key not in tree: $key") {
                     testTree.remove(key)
                 }
                 break
