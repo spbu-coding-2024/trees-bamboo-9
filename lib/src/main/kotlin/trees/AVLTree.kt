@@ -7,10 +7,7 @@ import kotlin.math.max
 class AVLTree<K : Comparable<K>, V> : Tree<K, V, AVLNode<K, V>>() {
 
     private fun height(node: AVLNode<K, V>?): Int {
-        if (node == null) {
-            return 0
-        }
-        return node.height
+        return node?.height ?: 0
     }
 
     private fun updateHeight(node: AVLNode<K, V>) {
@@ -104,10 +101,9 @@ class AVLTree<K : Comparable<K>, V> : Tree<K, V, AVLNode<K, V>>() {
     private fun insertAVL(node: AVLNode<K, V>?, key: K, newValue: V): AVLNode<K, V> {
         if (node == null) {
             val newNode = AVLNode(key, newValue)
-            if (size == 0) {
+            if (root == null) {
                 root = newNode
             }
-            size++
             return newNode
         }
         if (key < node.key) {
@@ -131,7 +127,6 @@ class AVLTree<K : Comparable<K>, V> : Tree<K, V, AVLNode<K, V>>() {
         } else if (key > node.key) {
             node.rightChild = removeAVL(node.rightChild, key)
         } else {
-            size--
             val left = node.leftChild
             val right = node.rightChild
             if (right == null) {
