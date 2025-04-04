@@ -1,4 +1,4 @@
-package RedBlackTreeTest
+package redBlackTreeTest
 
 import nodes.Color
 import nodes.RBNode
@@ -96,7 +96,6 @@ class RBTTest {
         }
     }
 
-
     private fun check_tree_balance(node: RBNode<Int, Int>?): Int {
         if (node == null) {
             return 1
@@ -144,7 +143,10 @@ class RBTTest {
         }
     }
 
-    private fun checkLeftSubtree(node: RBNode<Int, Int>, key: Int) {
+    private fun checkLeftSubtree(
+        node: RBNode<Int, Int>,
+        key: Int,
+    ) {
         assert(node.key < key)
         val leftChild = node.leftChild
         val rightChild = node.rightChild
@@ -156,7 +158,10 @@ class RBTTest {
         }
     }
 
-    private fun checkRightSubtree(node: RBNode<Int, Int>, key: Int) {
+    private fun checkRightSubtree(
+        node: RBNode<Int, Int>,
+        key: Int,
+    ) {
         assert(node.key > key)
         val leftChild = node.leftChild
         val rightChild = node.rightChild
@@ -167,6 +172,4 @@ class RBTTest {
             checkRightSubtree(rightChild, key)
         }
     }
-
 }
-
