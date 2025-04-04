@@ -1,4 +1,4 @@
-//package AVLTest
+package AVLTest
 
 import nodes.AVLNode
 import org.junit.jupiter.api.RepeatedTest
@@ -13,78 +13,13 @@ import kotlin.test.assertNotEquals
 
 class AVLTestProperty {
 
-    class Flag(
-        var flagOfBalance: Boolean = true //flag for check that tree is balanced
-    )
-
-    class MaxHeight(
-        var height: Int = 0, var key: Int = 0 //flag for find node with max height
-    )
-
     class CountNodes(
         var count: Int = 0 //flag for find count of nodes in tree
     )
 
-
-    private fun check_balance_of_node(node: AVLNode<Int, Int>, mapOfHeight: HashMap<Int, Int>, flagOfBalance: Flag) {
-        val left = node.leftChild
-        val right = node.rightChild
-        var heightLeft = 0
-        var heightRight = 0
-        if (left != null) {
-            val maxHeight = MaxHeight()
-            find_max_height_node(left, maxHeight, mapOfHeight)
-            //height of left height max - height parent
-            heightLeft = mapOfHeight.get(maxHeight.key) ?: 0
-            heightLeft -= mapOfHeight.get(node.key) ?: 0
-        }
-        if (right != null) {
-            val maxHeight = MaxHeight()
-            find_max_height_node(right, maxHeight, mapOfHeight)
-            //height of right height max - height parent
-            heightRight = mapOfHeight.get(maxHeight.key) ?: 0
-            heightRight -= mapOfHeight.get(node.key) ?: 0
-        }
-        if (abs(heightLeft - heightRight) > 1) {
-            flagOfBalance.flagOfBalance = false
-        } else {
-            if (left != null) {
-                check_balance_of_node(left, mapOfHeight, flagOfBalance)
-            }
-            if (right != null) {
-                check_balance_of_node(right, mapOfHeight, flagOfBalance)
-            }
-        }
-    }
-
-    private fun find_max_height_node(root: AVLNode<Int, Int>, maxHeight: MaxHeight, mapOfHeight: HashMap<Int, Int>) {
-        val heightOfRoot = mapOfHeight.get(root.key) ?: 0
-        if (heightOfRoot > maxHeight.height) {
-            maxHeight.height = heightOfRoot
-            maxHeight.key = root.key
-        }
-        val left = root.leftChild
-        val right = root.rightChild
-        if (left != null) {
-            find_max_height_node(left, maxHeight, mapOfHeight)
-        }
-        if (right != null) {
-            find_max_height_node(right, maxHeight, mapOfHeight)
-        }
-    }
-
-
-    private fun calculate_height_of_all_nodes(root: AVLNode<Int, Int>, height: Int, mapOfHeight: HashMap<Int, Int>) {
-        mapOfHeight.put(root.key, height)
-        val left = root.leftChild
-        val right = root.rightChild
-        if (left != null) {
-            calculate_height_of_all_nodes(left, height + 1, mapOfHeight)
-        }
-        if (right != null) {
-            calculate_height_of_all_nodes(right, height + 1, mapOfHeight)
-        }
-    }
+    class HeightOfNode(
+        var height: Int = 0 //flag for find height of node
+    )
 
     fun count_size_tree(root: AVLNode<Int, Int>, countNodes: CountNodes) {
         countNodes.count++
@@ -147,16 +82,38 @@ class AVLTestProperty {
         else node.key
     }
 
-    fun check_correct_AVL(root: AVLNode<Int, Int>): Boolean {
-        val mapOfHeight = HashMap<Int, Int>() //heights of all nodes in tree
-        calculate_height_of_all_nodes(root, 1, mapOfHeight)
-        val flagOfBalance = Flag()
-        check_balance_of_node(root, mapOfHeight, flagOfBalance)
-        if (!flagOfBalance.flagOfBalance) {
-            return false
-        }
-        return true
+    fun isAVLTree(tree: AVLTree<Int, Int>): Boolean {
+        val root = tree.root ?: return true
+        return isAVLNode(root)
     }
+
+    fun isAVLNode(node: AVLNode<Int, Int>): Boolean {
+        val left = node.leftChild
+        val right = node.rightChild
+        val heightLeft = HeightOfNode()
+        val heightRight = HeightOfNode()
+        calcHeight(left, heightLeft, 0)
+        calcHeight(right, heightRight, 0)
+        if (abs(heightLeft.height - heightRight.height) < 2) {
+            return if (left != null && right != null) isAVLNode(left) && isAVLNode(right)
+            else if (left != null) {
+                isAVLNode(left)
+            } else if (right != null) {
+                isAVLNode(right)
+            } else true
+        } else return false
+    }
+
+    fun calcHeight(node: AVLNode<Int, Int>?, maxHeight: HeightOfNode, height: Int) {
+        node ?: return
+        val newHeight = height + 1
+        if (newHeight > maxHeight.height) {
+            maxHeight.height = newHeight
+        }
+        calcHeight(node.leftChild, maxHeight, newHeight)
+        calcHeight(node.rightChild, maxHeight, newHeight)
+    }
+
 
     @RepeatedTest(100)
     fun propertyTest() {
@@ -176,12 +133,14 @@ class AVLTestProperty {
                 count_of_nodes_in_tree++
             }
             tree.insert(key, value)
-            val rootTree = tree.root
             var test = false
-            if (check_size(tree, count_of_nodes_in_tree) && (rootTree != null) &&
-                isBinarySearchTree(tree) && check_correct_AVL(rootTree)
+            if (check_size(tree, count_of_nodes_in_tree) &&
+                isBinarySearchTree(tree) && isAVLTree(tree)
             ) {
                 test = true
+            }
+            if (test == false) {
+                println("1")
             }
             assertEquals(test, true, "failed insert")
         }
@@ -207,11 +166,8 @@ class AVLTestProperty {
                 count_of_nodes_in_tree--
             }
             tree.remove(key)
-            val rootTree = tree.root
-            if (count_of_nodes_in_tree == 0 && check_size(tree, count_of_nodes_in_tree) && rootTree == null) {
-                test = true
-            } else if (check_size(tree, count_of_nodes_in_tree) && (rootTree != null) &&
-                isBinarySearchTree(tree) && check_correct_AVL(rootTree)
+            if (check_size(tree, count_of_nodes_in_tree) &&
+                isBinarySearchTree(tree) && isAVLTree(tree)
             ) {
                 test = true
             }
