@@ -6,7 +6,6 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
     override fun insert(key: K, newValue: V) {
         if (root == null) {
             root = BSNode(key, newValue)
-            size++
             return
         }
 
@@ -30,7 +29,6 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
                 return
             }
         }
-        size++
     }
 
     override fun remove(key: K) {
@@ -80,8 +78,6 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
                     if (isLeft) parent.leftChild = rmNode.rightChild
                     else parent.rightChild = rmNode.rightChild
                 }
-                size--
-                return
             }
 
             else -> {
@@ -105,7 +101,6 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
                 else parent.rightChild = replacement
             }
         }
-        size--
     }
 
     private fun findForRemove(
