@@ -13,6 +13,10 @@ class AVLTree<K : Comparable<K>, V> : Tree<K, V, AVLNode<K, V>>() {
         return node.height
     }
 
+    private fun updateHeight(node: AVLNode<K, V>) {
+        node.height = 1 + max(height(node.leftChild), height(node.rightChild))
+    }
+
     private fun rightRotate(rootNode: AVLNode<K, V>): AVLNode<K, V> {
         val left: AVLNode<K, V> = rootNode.leftChild ?: throw IllegalArgumentException("invalid argument left")
         val leftRight: AVLNode<K, V>? = left.rightChild
@@ -27,8 +31,8 @@ class AVLTree<K : Comparable<K>, V> : Tree<K, V, AVLNode<K, V>>() {
         }
 
         //update heights
-        rootNode.height = 1 + max(height(rootNode.leftChild), height(rootNode.rightChild))
-        left.height = 1 + max(height(left.leftChild), height(left.rightChild))
+        updateHeight(rootNode)
+        updateHeight(left)
 
         //return new root
         return left
@@ -48,8 +52,8 @@ class AVLTree<K : Comparable<K>, V> : Tree<K, V, AVLNode<K, V>>() {
         }
 
         //update heights
-        rootNode.height = 1 + max(height(rootNode.leftChild), height(rootNode.rightChild))
-        right.height = 1 + max(height(right.leftChild), height(right.rightChild))
+        updateHeight(rootNode)
+        updateHeight(right)
 
         //return new root
         return right
@@ -60,7 +64,7 @@ class AVLTree<K : Comparable<K>, V> : Tree<K, V, AVLNode<K, V>>() {
     }
 
     private fun balancing(node: AVLNode<K, V>): AVLNode<K, V> {
-        node.height = 1 + max(height(node.leftChild), height(node.rightChild))
+        updateHeight(node)
         val balance = getBalance(node)
 
         if (balance == 2) {
