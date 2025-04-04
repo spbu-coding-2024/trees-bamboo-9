@@ -23,7 +23,7 @@ abstract class Tree<K : Comparable<K>, V, treeNode : Node<K, V, treeNode>> : Ite
                 if (!wasRootInQueue) {
                     if (rootCopy != null) {
                         wasRootInQueue = true
-                        bfs(rootCopy)
+                        dfs(rootCopy)
                     } else return false
                 }
                 return queue.isNotEmpty()
@@ -33,15 +33,15 @@ abstract class Tree<K : Comparable<K>, V, treeNode : Node<K, V, treeNode>> : Ite
                 return queue.removeFirst()
             }
 
-            fun bfs(node: treeNode) {
+            fun dfs(node: treeNode) {
                 val leftChild = node.leftChild
                 val rightChild = node.rightChild
                 if (leftChild != null) {
-                    bfs(leftChild)
+                    dfs(leftChild)
                 }
                 queue.add(node)
                 if (rightChild != null) {
-                    bfs(rightChild)
+                    dfs(rightChild)
                 }
             }
         }
