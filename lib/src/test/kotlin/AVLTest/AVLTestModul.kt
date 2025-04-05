@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test
 import trees.AVLTree
 import nodes.AVLNode
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 class AVLTestModul {
 
@@ -21,7 +22,7 @@ class AVLTestModul {
         var nodeNumber: Int = 0 //number of node in correctTree
     )
 
-    fun equalsTree(tree: AVLTree<Int, Int>, correctTree: ArrayDeque<CorrectNode>): Boolean {
+    private fun equalsTree(tree: AVLTree<Int, Int>, correctTree: ArrayDeque<CorrectNode>): Boolean {
         val rootTree = tree.root
 
         //both trees empty
@@ -37,7 +38,7 @@ class AVLTestModul {
     }
 
     //check equals of node and correctTree[flag.nodeNumber]
-    fun equalsNode(node: AVLNode<Int, Int>, correctTree: ArrayDeque<CorrectNode>, flag: Flag) {
+    private fun equalsNode(node: AVLNode<Int, Int>, correctTree: ArrayDeque<CorrectNode>, flag: Flag) {
         val correctNode = correctTree[flag.nodeNumber]
         if (node.key != correctNode.key || node.value != correctNode.value) {
             flag.flagOfEquals = false
@@ -252,6 +253,18 @@ class AVLTestModul {
 
         assertEquals(equalsTree(tree, correctTree), true)
     }
+
+
+    @Test
+    fun test_remove_root_in_tree_with_one_node() {
+        val tree = AVLTree<Int, Int>()
+        tree.insert(39, 40)
+
+        tree.remove(39)
+
+        assertNull(tree.root)
+    }
+
 
     @Test
     fun test_remove_without_sons() {
@@ -536,6 +549,11 @@ class AVLTestModul {
         assertEquals(equalsTree(tree, correctTree), true)
     }
 
+    @Test
+    fun test_find_in_empty_tree() {
+        val tree = AVLTree<Int, Int>()
+        assertNull(tree.find(100))
+    }
 
     @Test
     fun test_basic_find() {

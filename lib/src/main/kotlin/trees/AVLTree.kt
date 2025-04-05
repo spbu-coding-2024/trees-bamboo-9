@@ -7,10 +7,11 @@ import kotlin.math.max
 class AVLTree<K : Comparable<K>, V> : Tree<K, V, AVLNode<K, V>>() {
 
     private fun height(node: AVLNode<K, V>?): Int {
-        if (node == null) {
-            return 0
-        }
-        return node.height
+        return node?.height ?: 0
+    }
+
+    private fun updateHeight(node: AVLNode<K, V>) {
+        node.height = 1 + max(height(node.leftChild), height(node.rightChild))
     }
 
     private fun rightRotate(rootNode: AVLNode<K, V>): AVLNode<K, V> {
@@ -27,8 +28,8 @@ class AVLTree<K : Comparable<K>, V> : Tree<K, V, AVLNode<K, V>>() {
         }
 
         //update heights
-        rootNode.height = 1 + max(height(rootNode.leftChild), height(rootNode.rightChild))
-        left.height = 1 + max(height(left.leftChild), height(left.rightChild))
+        updateHeight(rootNode)
+        updateHeight(left)
 
         //return new root
         return left
@@ -48,8 +49,8 @@ class AVLTree<K : Comparable<K>, V> : Tree<K, V, AVLNode<K, V>>() {
         }
 
         //update heights
-        rootNode.height = 1 + max(height(rootNode.leftChild), height(rootNode.rightChild))
-        right.height = 1 + max(height(right.leftChild), height(right.rightChild))
+        updateHeight(rootNode)
+        updateHeight(right)
 
         //return new root
         return right
@@ -60,7 +61,7 @@ class AVLTree<K : Comparable<K>, V> : Tree<K, V, AVLNode<K, V>>() {
     }
 
     private fun balancing(node: AVLNode<K, V>): AVLNode<K, V> {
-        node.height = 1 + max(height(node.leftChild), height(node.rightChild))
+        updateHeight(node)
         val balance = getBalance(node)
 
         if (balance == 2) {
@@ -95,35 +96,13 @@ class AVLTree<K : Comparable<K>, V> : Tree<K, V, AVLNode<K, V>>() {
         return balancing(node)
     }
 
-    //delete all reference of deleteNode in tree with root in node
-    private fun deleteRef(node: AVLNode<K, V>?, deleteNode: AVLNode<K, V>) {
-        node ?: throw Exception("AVLTree without root")
-        val left = node.leftChild
-        val right = node.rightChild
-        if (left === deleteNode) {
-            node.leftChild = null
-            return
-        }
-        if (right === deleteNode) {
-            node.rightChild = null
-            return
-        }
-        if (left != null) {
-            deleteRef(left, deleteNode)
-        }
-        if (right != null) {
-            deleteRef(right, deleteNode)
-        }
-    }
-    internal var size =0
     //insert in tree with root in node
     private fun insertAVL(node: AVLNode<K, V>?, key: K, newValue: V): AVLNode<K, V> {
         if (node == null) {
             val newNode = AVLNode(key, newValue)
-            if (size == 0) {
+            if (root == null) {
                 root = newNode
             }
-            size++
             return newNode
         }
         if (key < node.key) {
@@ -147,12 +126,8 @@ class AVLTree<K : Comparable<K>, V> : Tree<K, V, AVLNode<K, V>>() {
         } else if (key > node.key) {
             node.rightChild = removeAVL(node.rightChild, key)
         } else {
-            size--
             val left = node.leftChild
             val right = node.rightChild
-            node.leftChild = null
-            node.rightChild = null
-            deleteRef(root, node)
             if (right == null) {
                 if (node === root) {
                     root = left
