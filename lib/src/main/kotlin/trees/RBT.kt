@@ -15,7 +15,7 @@ class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
     }
 
     internal fun root(): RBNode<K, V>? = root
-
+    private var size: Int = 0
     fun size(): Int = size
 
     override fun insert(
