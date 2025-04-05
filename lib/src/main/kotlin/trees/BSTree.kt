@@ -26,7 +26,7 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
                 } else currNode = currNode.rightChild ?: throw IllegalStateException("Existing vertex became null")
             } else {
                 currNode.value = newValue
-                return
+                break
             }
         }
     }
