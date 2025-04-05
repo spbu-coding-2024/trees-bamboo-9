@@ -115,7 +115,7 @@ class AVLTree<K : Comparable<K>, V> : Tree<K, V, AVLNode<K, V>>() {
             deleteRef(right, deleteNode)
         }
     }
-
+    internal var size =0
     //insert in tree with root in node
     private fun insertAVL(node: AVLNode<K, V>?, key: K, newValue: V): AVLNode<K, V> {
         if (node == null) {

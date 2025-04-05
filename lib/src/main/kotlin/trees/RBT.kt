@@ -1,23 +1,30 @@
 package trees
 
-import nodes.*
+import nodes.Color
+import nodes.RBNode
 
 class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
     override fun find(key: K): V? {
-        if(root==null) return null
+        if (root == null) return null
         val node = findNode(key)
-        if(node.key != key){
+        if (node == null) return null
+        if (node.key != key) {
             return null
         }
         return node.value
     }
 
     internal fun root(): RBNode<K, V>? = root
+    private var size: Int = 0
     fun size(): Int = size
-    override fun insert(key: K, newValue: V) {
-        if (size == 0) {
+
+    override fun insert(
+        key: K,
+        newValue: V,
+    ) {
+        if (size == 0 && root == null) {
             initTree(key, newValue)
-        } else {
+        } else if (root != null) {
             val newNode = initNewNode(key, newValue)
             if (newNode != null) {
                 size++
@@ -31,62 +38,72 @@ class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
     override fun remove(key: K) {
         if (root == null) return
         var node = findNode(key)
-        if (node.key != key) return
-        size--
-        if (size == 0) {
-            root = null
-            return
-        }
-        if (node.leftChild != null && node.rightChild != null) {
-            val leftChild = node.leftChild
-            if (leftChild != null) {
-                node = replaceNodeWithMaxNodeOfLeftSubtree(node, leftChild)
+        if (node != null) {
+            if (node.key != key) return
+            size--
+            if (size == 0) {
+                root = null
+                return
             }
-
-        }
-        if (node.rightChild==null && node.leftChild==null && !isBlackNode(node)) {
-            deleteRedNode(node)
-        } else if (node.rightChild!=null || node.leftChild!=null && isBlackNode(node)) {
-            deleteBlackNodeWithOneChild(node)
-        } else {
-            deleteBlackNodeWithoutChildren(node)
+            if (node.leftChild != null && node.rightChild != null) {
+                val leftChild = node.leftChild
+                if (leftChild != null) {
+                    node = replaceNodeWithMaxNodeOfLeftSubtree(node, leftChild)
+                }
+            }
+            if (node.rightChild == null && node.leftChild == null && !isBlackNode(node)) {
+                deleteRedNode(node)
+            } else if (node.rightChild != null || node.leftChild != null && isBlackNode(node)) {
+                deleteBlackNodeWithOneChild(node)
+            } else {
+                deleteBlackNodeWithoutChildren(node)
+            }
         }
     }
 
-    private fun initTree(firstKey: K, fvalue: V) {//Make first node in Tree
+    private fun initTree(
+        firstKey: K,
+        fvalue: V,
+    ) { // Make first node in Tree
         root = RBNode(key = firstKey, value = fvalue)
+        root?.color = Color.BLACK
         size++
     }
 
-    private fun initNewNode(newKey: K, value: V): RBNode<K, V>? {//Make New Node
-        val newNode: RBNode<K, V> = findNode(newKey)
-        if (newNode.key == newKey) {
-            newNode.value = value
-            return null
-        } else if (newNode.key < newKey) {
-            newNode.rightChild = RBNode(newKey, value)
-            newNode.rightChild?.parent = newNode
-            return newNode.rightChild
-        } else {
-            newNode.leftChild = RBNode(newKey, value)
-            newNode.leftChild?.parent = newNode
-            return newNode.leftChild
-        }
-    }
-
-    private fun findNode(key: K): RBNode<K, V> {
-        var currentNode = root
-        while (true) {
-            if (currentNode != null) {
-                if (key < currentNode.key) {
-                    currentNode = currentNode.leftChild ?: return currentNode
-                } else if (key > currentNode.key) {
-                    currentNode = currentNode.rightChild ?: return currentNode
-                } else {
-                    return currentNode
-                }
+    private fun initNewNode(
+        newKey: K,
+        value: V,
+    ): RBNode<K, V>? { // Make New Node
+        val newNode: RBNode<K, V>? = findNode(newKey)
+        if (newNode != null) {
+            if (newNode.key == newKey) {
+                newNode.value = value
+                return null
+            } else if (newNode.key < newKey) {
+                newNode.rightChild = RBNode(newKey, value)
+                newNode.rightChild?.parent = newNode
+                return newNode.rightChild
+            } else {
+                newNode.leftChild = RBNode(newKey, value)
+                newNode.leftChild?.parent = newNode
+                return newNode.leftChild
             }
         }
+        return null
+    }
+
+    private fun findNode(key: K): RBNode<K, V>? {
+        var currentNode = root
+        while (currentNode != null) {
+            if (key < currentNode.key) {
+                currentNode = currentNode.leftChild ?: return currentNode
+            } else if (key > currentNode.key) {
+                currentNode = currentNode.rightChild ?: return currentNode
+            } else {
+                return currentNode
+            }
+        }
+        return null
     }
 
     private fun balanceAfterInsert(node: RBNode<K, V>) {
@@ -140,7 +157,7 @@ class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
         }
     }
 
-    private fun balanceIfRedUncle(node: RBNode<K, V>) {//сократи
+    private fun balanceIfRedUncle(node: RBNode<K, V>) { // сократи
         val parent: RBNode<K, V>? = node.parent
         val uncle: RBNode<K, V>? = findBrother(parent)
         val grandFather: RBNode<K, V>? = parent?.parent
@@ -150,36 +167,43 @@ class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
             grandFather.color = Color.RED
             checkNodeForRootAfterBalancing(grandFather)
         }
-        if (grandFather!=null  && !isBlackNode(grandFather.parent)) {
+        if (grandFather != null && !isBlackNode(grandFather.parent)) {
             balanceAfterInsert(grandFather)
         }
     }
 
     private fun balanceIfUncleRightChild(node: RBNode<K, V>) {
         var parent: RBNode<K, V>? = node.parent
-        if (parent?.leftChild?.key != node.key) {
+        if (!isLeftChild(node)) {
             rotateLeft(node)
             parent = node
         }
-        parent.color = Color.BLACK
-        parent.parent?.color = Color.RED
-        rotateRight(parent)
-        checkNodeForRootAfterBalancing(parent)
+        if (parent != null) {
+            parent.color = Color.BLACK
+            parent.parent?.color = Color.RED
+            rotateRight(parent)
+            checkNodeForRootAfterBalancing(parent)
+        }
     }
 
     private fun balanceIfUncleLeftChild(node: RBNode<K, V>) {
         var parent: RBNode<K, V>? = node.parent
-        if (parent?.rightChild?.key != node.key) {
+        if (isLeftChild(node)) {
             rotateRight(node)
             parent = node
         }
-        parent.color = Color.BLACK
-        parent.parent?.color = Color.RED
-        rotateLeft(parent)
-        checkNodeForRootAfterBalancing(parent)
+        if (parent != null) {
+            parent.color = Color.BLACK
+            parent.parent?.color = Color.RED
+            rotateLeft(parent)
+            checkNodeForRootAfterBalancing(parent)
+        }
     }
 
-    private fun replaceNodeWithMaxNodeOfLeftSubtree(node: RBNode<K, V>, leftChild: RBNode<K, V>): RBNode<K, V> {
+    private fun replaceNodeWithMaxNodeOfLeftSubtree(
+        node: RBNode<K, V>,
+        leftChild: RBNode<K, V>,
+    ): RBNode<K, V> {
         var currentNode: RBNode<K, V> = leftChild
         var currentRightChild = currentNode.rightChild
         while (currentRightChild != null) {
@@ -192,7 +216,7 @@ class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
 
     private fun balanceAfterRemove(node: RBNode<K, V>) {
         if (node.parent == null) return
-        val brother=findBrother(node)
+        val brother = findBrother(node)
         if (brother != null) {
             if (!isBlackNode(brother)) {
                 balanceIfRedBrother(brother)
@@ -207,21 +231,18 @@ class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
         }
     }
 
-    private fun isBlackNode(node: RBNode<K,V>?) : Boolean {
-        return (node==null || (node.color == Color.BLACK))
-    }
+    private fun isBlackNode(node: RBNode<K, V>?): Boolean = (node == null || (node.color == Color.BLACK))
 
     private fun balanceIfBrotherHasTwoBlackChildren(brother: RBNode<K, V>) {
         brother.color = Color.RED
         val parent = brother.parent
-        if (parent!=null) {
+        if (parent != null) {
             if (isBlackNode(parent)) {
                 balanceAfterRemove(parent)
             } else {
                 parent.color = Color.BLACK
             }
         }
-
     }
 
     private fun balanceIfRedBrother(brother: RBNode<K, V>) {
@@ -263,7 +284,10 @@ class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
         }
     }
 
-    private fun swapNodes(node1: RBNode<K, V>, node2: RBNode<K, V>): RBNode<K, V> {
+    private fun swapNodes(
+        node1: RBNode<K, V>,
+        node2: RBNode<K, V>,
+    ): RBNode<K, V> {
         makeNodeWithSameLinksAndCertainKey(node1, node2.key, node2.value)
         return makeNodeWithSameLinksAndCertainKey(node2, node1.key, node1.value)
     }
@@ -299,9 +323,7 @@ class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
         }
     }
 
-    private fun isLeftChild(node: RBNode<K, V>?): Boolean {
-        return node?.parent?.leftChild?.key == node?.key
-    }
+    private fun isLeftChild(node: RBNode<K, V>?): Boolean = node?.parent?.leftChild?.key == node?.key
 
     private fun rotateLeft(node: RBNode<K, V>) {
         val parent = node.parent
@@ -323,7 +345,10 @@ class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
         parent?.parent = node
     }
 
-    private fun switchParentsChild(isLeftChild: Boolean, node: RBNode<K, V>) {
+    private fun switchParentsChild(
+        isLeftChild: Boolean,
+        node: RBNode<K, V>,
+    ) {
         if (isLeftChild) {
             node.parent?.leftChild = node
         } else {
@@ -331,7 +356,11 @@ class RBT<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
         }
     }
 
-    private fun makeNodeWithSameLinksAndCertainKey(node: RBNode<K, V>, nkey: K, nval: V): RBNode<K, V> {
+    private fun makeNodeWithSameLinksAndCertainKey(
+        node: RBNode<K, V>,
+        nkey: K,
+        nval: V,
+    ): RBNode<K, V> {
         val newNode = RBNode(nkey, nval)
         newNode.color = node.color
         newNode.leftChild = node.leftChild

@@ -3,7 +3,6 @@ package trees
 import nodes.Node
 
 abstract class Tree<K : Comparable<K>, V, treeNode : Node<K, V, treeNode>> : Iterable<treeNode> {
-    internal var size: Int = 0
     var root: treeNode? = null
         internal set
         public get
@@ -23,7 +22,7 @@ abstract class Tree<K : Comparable<K>, V, treeNode : Node<K, V, treeNode>> : Ite
                 if (!wasRootInQueue) {
                     if (rootCopy != null) {
                         wasRootInQueue = true
-                        bfs(rootCopy)
+                        dfs(rootCopy)
                     } else return false
                 }
                 return queue.isNotEmpty()
@@ -33,15 +32,32 @@ abstract class Tree<K : Comparable<K>, V, treeNode : Node<K, V, treeNode>> : Ite
                 return queue.removeFirst()
             }
 
-            fun bfs(node: treeNode) {
-                val leftChild = node.leftChild
-                val rightChild = node.rightChild
-                if (leftChild != null) {
-                    bfs(leftChild)
-                }
-                queue.add(node)
-                if (rightChild != null) {
-                    bfs(rightChild)
+            fun dfs(root: treeNode) {
+                val queueForDFS:ArrayDeque<treeNode> = ArrayDeque()
+                queueForDFS.add(root)
+                val visitedKeys : HashSet<K> = hashSetOf<K>()
+                while (!queueForDFS.isEmpty()) {
+                    val node =queueForDFS.first()
+                    val left=node.leftChild
+                    val right=node.rightChild
+                    if(left!=null ){
+                        if(!visitedKeys.contains(left.key)) {
+                            queueForDFS.addFirst(left)
+                            continue
+                        }
+                    }
+                    if(right!=null){
+                        if(!visitedKeys.contains(right.key)) {
+                            visitedKeys.add(node.key)
+                            queueForDFS.removeFirst()
+                            queue.add(node)
+                            queueForDFS.addFirst(right)
+                            continue
+                        }
+                    }
+                    visitedKeys.add(node.key)
+                    queueForDFS.removeFirst()
+                    queue.add(node)
                 }
             }
         }
