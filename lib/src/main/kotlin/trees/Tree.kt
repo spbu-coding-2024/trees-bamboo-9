@@ -32,15 +32,32 @@ abstract class Tree<K : Comparable<K>, V, treeNode : Node<K, V, treeNode>> : Ite
                 return queue.removeFirst()
             }
 
-            fun dfs(node: treeNode) {
-                val leftChild = node.leftChild
-                val rightChild = node.rightChild
-                if (leftChild != null) {
-                    dfs(leftChild)
-                }
-                queue.add(node)
-                if (rightChild != null) {
-                    dfs(rightChild)
+            fun dfs(root: treeNode) {
+                val queueForDFS:ArrayDeque<treeNode> = ArrayDeque()
+                queueForDFS.add(root)
+                val visitedKeys : HashSet<K> = hashSetOf<K>()
+                while (!queueForDFS.isEmpty()) {
+                    val node =queueForDFS.first()
+                    val left=node.leftChild
+                    val right=node.rightChild
+                    if(left!=null ){
+                        if(!visitedKeys.contains(left.key)) {
+                            queueForDFS.addFirst(left)
+                            continue
+                        }
+                    }
+                    if(right!=null){
+                        if(!visitedKeys.contains(right.key)) {
+                            visitedKeys.add(node.key)
+                            queueForDFS.removeFirst()
+                            queue.add(node)
+                            queueForDFS.addFirst(right)
+                            continue
+                        }
+                    }
+                    visitedKeys.add(node.key)
+                    queueForDFS.removeFirst()
+                    queue.add(node)
                 }
             }
         }
