@@ -4,7 +4,6 @@ import nodes.BSNode
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.RepeatedTest
-import org.junit.jupiter.api.assertThrows
 import trees.BSTree
 import kotlin.random.Random
 import kotlin.random.Random.Default.nextBoolean
@@ -266,18 +265,20 @@ class BSRemoveTest {
     fun `remove key not in tree by right`() {
         val testTree: BSTree<Int, Int> = BSTree()
         testTree.insert(1, 1)
-        assertThrows<NoSuchElementException>("Key not in tree: 2") {
-            testTree.remove(2)
-        }
+        val expectedResult: BSTree<Int, Int> = BSTree()
+        expectedResult.root = BSNode(1, 1)
+        testTree.remove(2)
+        assert(compareTrees(expectedResult, testTree))
     }
 
     @Test
     fun `remove key not in tree by left`() {
         val testTree: BSTree<Int, Int> = BSTree()
         testTree.insert(1, 1)
-        assertThrows<NoSuchElementException>("Key not in tree: 0") {
-            testTree.remove(0)
-        }
+        val expectedResult: BSTree<Int, Int> = BSTree()
+        expectedResult.root = BSNode(1, 1)
+        testTree.remove(0)
+        assert(compareTrees(expectedResult, testTree))
     }
 
     @Test
@@ -330,12 +331,10 @@ class BSRemoveTest {
     @Test
     fun `remove with no nodes`() {
         val testTree: BSTree<Int, Int> = BSTree()
-        assertThrows<NoSuchElementException>("Key not in tree: 1") {
-            testTree.remove(1)
-        }
-
         val expectedResult: BSTree<Int, Int> = BSTree()
-        assert(compareTrees(testTree, expectedResult))
+        testTree.remove(1)
+
+        assert(compareTrees(expectedResult, testTree))
     }
 
     @Test
@@ -429,7 +428,7 @@ class BSRemoveTest {
     }
 
     @RepeatedTest(20)
-    fun `is binary search after remove keys from tree`() {
+    fun `is binary search tree after remove keys from tree`() {
         val testTree: BSTree<Int, Int> = BSTree()
         val nodeCount = Random.nextInt(0..100)
         val keys: ArrayDeque<Int> = ArrayDeque()
@@ -447,29 +446,19 @@ class BSRemoveTest {
     }
 
     @RepeatedTest(20)
-    fun `is binary search after remove random key`() {
+    fun `is binary search tree after remove random key`() {
         val testTree: BSTree<Int, Int> = BSTree()
         val nodeCount = Random.nextInt(0..100)
-        val keys: ArrayDeque<Int> = ArrayDeque()
         var key: Int
         for (i in 0..<nodeCount) {
             key = nextInt()
-            keys.add(key)
             testTree.insert(key, nextInt())
         }
-        val deletingNodeCount = nextInt()
+        val deletingNodeCount = Random.nextInt(0..1000)
         for (i in 0..<deletingNodeCount) {
             key = nextInt()
-            if (key in keys) {
-                testTree.remove(key)
-                keys.remove(key)
-                assert(isBinarySearchTree(testTree))
-            } else {
-                assertThrows<NoSuchElementException>("Key not in tree: $key") {
-                    testTree.remove(key)
-                }
-                break
-            }
+            testTree.remove(key)
+            assert(isBinarySearchTree(testTree))
         }
     }
 }

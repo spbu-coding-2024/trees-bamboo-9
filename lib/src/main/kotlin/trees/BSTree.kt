@@ -32,10 +32,11 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
     }
 
     override fun remove(key: K) {
-        var parent = root ?: throw NoSuchElementException("Key not in tree: $key")
-        var rmNode = root ?: throw NoSuchElementException("Key not in tree: $key")
+        var parent = root ?: return
+        var rmNode = root ?: return
 
         findForRemove(key, rmNode, parent).let {
+            if (it == null) return
             parent = it.first
             rmNode = it.second
         }
@@ -107,7 +108,7 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
         key: K,
         removingNode: BSNode<K, V>,
         parent: BSNode<K, V>
-    ): Pair<BSNode<K, V>, BSNode<K, V>> {
+    ): Pair<BSNode<K, V>, BSNode<K, V>>? {
         var isFound = false
         var removingNode1 = removingNode
         var parent1 = parent
@@ -115,12 +116,12 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
             when {
                 key > removingNode1.key -> {
                     parent1 = removingNode1
-                    removingNode1 = removingNode1.rightChild ?: throw NoSuchElementException("Key not in tree: $key")
+                    removingNode1 = removingNode1.rightChild ?: return null
                 }
 
                 key < removingNode1.key -> {
                     parent1 = removingNode1
-                    removingNode1 = removingNode1.leftChild ?: throw NoSuchElementException("Key not in tree: $key")
+                    removingNode1 = removingNode1.leftChild ?: return null
                 }
 
                 else -> isFound = true
