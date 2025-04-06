@@ -3,6 +3,7 @@ package trees
 import nodes.BSNode
 
 class BSTree<K : Comparable<K>, V> : Tree<K, V, BSNode<K, V>>() {
+    internal var size =0
     override fun insert(key: K, newValue: V) {
         if (root == null) {
             root = BSNode(key, newValue)
